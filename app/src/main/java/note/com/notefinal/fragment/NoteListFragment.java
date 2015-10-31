@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import note.com.notefinal.R;
+import note.com.notefinal.adapters.NoteListAdapter;
 import note.com.notefinal.entity.Note;
 
 /**
@@ -33,8 +34,20 @@ public class NoteListFragment extends ListFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        List<Note> data = getArguments().getParcelableArrayList("data");
+        initAdapter();
+        setCurrentPositition();
+    }
 
+    private void setCurrentPositition() {
+        int currentPosition = getArguments().getInt("currentPosition");
+        getListView().setSelection(currentPosition);
+    }
+
+    private void initAdapter() {
+        List<Note> data = getArguments().getParcelableArrayList("data");
+        NoteListAdapter adapter = new NoteListAdapter(
+                getActivity().getApplicationContext(), data, getCurrentOrientation());
+        setListAdapter(adapter);
     }
 
     private int getCurrentOrientation() {
