@@ -35,10 +35,10 @@ public class NoteListFragment extends ListFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initAdapter();
-        setCurrentPositition();
+        setCurrentPosition();
     }
 
-    private void setCurrentPositition() {
+    private void setCurrentPosition() {
         int currentPosition = getArguments().getInt("currentPosition");
         getListView().setSelection(currentPosition);
     }
