@@ -1,12 +1,20 @@
 package note.com.notefinal;
 
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import note.com.notefinal.fragment.NoteListFragment;
+
 
 public class MainActivity extends ActionBarActivity {
+    private FragmentTransaction fragmentTransaction;
+    private NoteListFragment noteListFragment;
+    private String currentFragment;
+    private int noteListCurrentPosition;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

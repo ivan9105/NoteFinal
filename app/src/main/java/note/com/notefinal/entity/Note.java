@@ -13,7 +13,7 @@ public class Note implements Parcelable {
     private UUID id;
     private String title;
     private String description;
-    private Date date;
+    private Date createTs;
     private Tag tag;
 
     public Note() {
@@ -30,7 +30,7 @@ public class Note implements Parcelable {
         this.id = UUID.fromString(data[0]);
         this.title = data[1];
         this.description = data[2];
-        this.date = new Date(source.readLong());
+        this.createTs = new Date(source.readLong());
     }
 
     public UUID getId() {
@@ -57,12 +57,12 @@ public class Note implements Parcelable {
         this.description = description;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getCreateTs() {
+        return createTs;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setCreateTs(Date createTs) {
+        this.createTs = createTs;
     }
 
     public Tag getTag() {
@@ -87,7 +87,7 @@ public class Note implements Parcelable {
                 String.valueOf(tag.getId()),
                 tag.getName()
         });
-        dest.writeLong(date.getTime());
+        dest.writeLong(createTs.getTime());
     }
 
     public static final Parcelable.Creator<Note> CREATOR = new Creator<Note>() {

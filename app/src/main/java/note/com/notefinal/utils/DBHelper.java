@@ -76,7 +76,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         }
                         script = sb.toString();
                     } catch (FileNotFoundException e) {
-                        Log.i("dbtag", e.toString());
+                        LogUtils.log(this.getClass(), e.getLocalizedMessage());
                     } finally {
                         if (reader != null) {
                             reader.close();
