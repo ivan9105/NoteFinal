@@ -1,5 +1,8 @@
 package note.com.notefinal.utils;
 
+import android.support.annotation.Nullable;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -12,8 +15,19 @@ public class DateUtil {
         return new Date();
     }
 
-    public static String convertToString(Date date) {
+    public static String toString(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss", Locale.ENGLISH);
         return sdf.format(date);
+    }
+
+    @Nullable
+    public static Date toDate(String dateStr) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss", Locale.ENGLISH);
+        try {
+            sdf.parse(dateStr);
+        } catch (ParseException e) {
+            return null;
+        }
+        return null;
     }
 }
