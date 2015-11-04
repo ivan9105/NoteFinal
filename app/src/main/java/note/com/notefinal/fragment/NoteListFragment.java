@@ -13,6 +13,7 @@ import java.util.List;
 import note.com.notefinal.R;
 import note.com.notefinal.adapters.NoteListAdapter;
 import note.com.notefinal.entity.Note;
+import note.com.notefinal.utils.dao.note.NoteDao;
 
 /**
  * Created by Иван on 27.10.2015.
@@ -20,14 +21,20 @@ import note.com.notefinal.entity.Note;
 public class NoteListFragment extends ListFragment {
     public static final String NAME = "noteList";
 
+    private NoteDao noteDao;
+
+    public NoteListFragment() {
+        noteDao = new NoteDao();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         int currentOrientation = getCurrentOrientation();
 
         if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
-            return inflater.inflate(R.layout.list_portrait, null);
+            return inflater.inflate(R.layout.list_portrait, container);
         } else {
-            return inflater.inflate(R.layout.list_landscape, null);
+            return inflater.inflate(R.layout.list_landscape, container);
         }
     }
 
@@ -35,16 +42,16 @@ public class NoteListFragment extends ListFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initAdapter();
-        setCurrentPosition();
+        setPosition();
     }
 
-    private void setCurrentPosition() {
-        int currentPosition = getArguments().getInt("currentPosition");
-        getListView().setSelection(currentPosition);
+    private void setPosition() {
+        int position = getArguments().getInt("position");
+        getListView().setSelection(position);
     }
 
     private void initAdapter() {
-        List<Note> data = getArguments().getParcelableArrayList("data");
+        List<Note> data = noteDao.getItems(note.com.notefinal.utils.dao.enums.View.FULL);
         NoteListAdapter adapter = new NoteListAdapter(
                 getActivity().getApplicationContext(), data, getCurrentOrientation());
         setListAdapter(adapter);
@@ -52,5 +59,9 @@ public class NoteListFragment extends ListFragment {
 
     private int getCurrentOrientation() {
         return getResources().getConfiguration().orientation;
+    }
+
+    public int getCurrentPosition() {
+        return getListView().getFirstVisiblePosition();
     }
 }

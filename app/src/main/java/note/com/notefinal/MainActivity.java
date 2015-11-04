@@ -10,13 +10,14 @@ import android.view.MenuItem;
 import note.com.notefinal.fragment.NoteListFragment;
 import note.com.notefinal.utils.AppConfig;
 import note.com.notefinal.utils.DBUtils;
+import note.com.notefinal.utils.LogUtils;
 
 
 public class MainActivity extends ActionBarActivity {
     private FragmentTransaction fragmentTransaction;
     private NoteListFragment listFragment;
     private String currentFragment;
-    private int noteListCurrentPosition;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,14 +26,26 @@ public class MainActivity extends ActionBarActivity {
         //check db version if version is changed than run update db task and progress bar
         updateDbIfNeeded();
         //init main fragment
-        initListFragment();
+        initListFragment(savedInstanceState);
     }
 
-    private void initListFragment() {
+    private void initListFragment(Bundle savedInstanceState) {
+        LogUtils.log(MainActivity.class, "init list fragment");
         listFragment = new NoteListFragment();
+        currentFragment = NoteListFragment.NAME;
+
+        listFragment.setArguments(savedInstanceState);
+
+        try {
+            fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.list, listFragment, NoteListFragment.NAME);
+        } finally {
+            fragmentTransaction.commit();
+        }
     }
 
     private void updateDbIfNeeded() {
+        LogUtils.log(MainActivity.class, "update db");
         int dbVersion = AppConfig.getDbVersion(getApplicationContext());
         DBUtils dbHelper = new DBUtils(this, dbVersion);
         //init static db
@@ -63,4 +76,14 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if (NoteListFragment.NAME.equals(currentFragment)) {
+            outState.putInt("position", listFragment.getCurrentPosition());
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+
 }
