@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import note.com.notefinal.entity.Note;
 import note.com.notefinal.entity.Tag;
+import note.com.notefinal.utils.DBUtils;
 import note.com.notefinal.utils.DateUtil;
 import note.com.notefinal.utils.dao.Dao;
 import note.com.notefinal.utils.dao.enums.View;
@@ -24,9 +25,9 @@ public class NoteDao implements Dao<Note> {
     private SQLiteDatabase db;
     private TagDao tagDao;
 
-    public NoteDao(SQLiteDatabase db) {
-        this.db = db;
-        this.tagDao = new TagDao(db);
+    public NoteDao() {
+        this.db = DBUtils.getDb();
+        this.tagDao = new TagDao();
     }
 
     @Override

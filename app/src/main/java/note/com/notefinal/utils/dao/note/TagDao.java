@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 import note.com.notefinal.entity.Tag;
+import note.com.notefinal.utils.DBUtils;
 import note.com.notefinal.utils.dao.Dao;
 import note.com.notefinal.utils.dao.enums.View;
 
@@ -20,8 +21,8 @@ public class TagDao implements Dao<Tag> {
     public static final String TABLE_NAME = "FINAL_TAG";
     private SQLiteDatabase db;
 
-    public TagDao(SQLiteDatabase db) {
-        this.db = db;
+    public TagDao() {
+        this.db = DBUtils.getDb();;
     }
 
     @Override

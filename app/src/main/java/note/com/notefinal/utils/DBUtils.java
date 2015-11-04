@@ -19,15 +19,17 @@ import java.util.Locale;
 /**
  * Created by Иван on 31.10.2015.
  */
-public class DBHelper extends SQLiteOpenHelper {
+public class DBUtils extends SQLiteOpenHelper {
     public static final String DB_NAME = "note_final";
     public static final String DB_DIRECTORY = "db";
 
     private Context ctx;
+    private static SQLiteDatabase db;
 
-    public DBHelper(Context ctx, int DB_VERSION) {
+    public DBUtils(Context ctx, int DB_VERSION) {
         super(ctx, DB_NAME, null, DB_VERSION);
         this.ctx = ctx;
+        db = getWritableDatabase();
     }
 
     @Override
@@ -105,5 +107,9 @@ public class DBHelper extends SQLiteOpenHelper {
         } finally {
             db.endTransaction();
         }
+    }
+
+    public static SQLiteDatabase getDb() {
+        return db;
     }
 }
