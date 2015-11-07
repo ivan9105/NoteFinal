@@ -24,10 +24,9 @@ public class DateUtil {
     public static Date toDate(String dateStr) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss", Locale.ENGLISH);
         try {
-            sdf.parse(dateStr);
+            return sdf.parse(dateStr);
         } catch (ParseException e) {
             return null;
         }
-        return null;
     }
 }

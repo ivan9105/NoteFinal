@@ -38,7 +38,7 @@ public class MainActivity extends ActionBarActivity {
 
         try {
             fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.list, listFragment, NoteListFragment.NAME);
+            fragmentTransaction.replace(R.id.content, listFragment, NoteListFragment.NAME);
         } finally {
             fragmentTransaction.commit();
         }
@@ -50,9 +50,7 @@ public class MainActivity extends ActionBarActivity {
         DBUtils dbHelper = new DBUtils(this, dbVersion);
         //init static db
         SQLiteDatabase db = DBUtils.getDb();
-        if (db.needUpgrade(dbVersion)) {
-            dbHelper.onUpgrade(db, db.getVersion(), dbVersion);
-        }
+        dbHelper.onUpgrade(db, db.getVersion(), dbVersion);
     }
 
     @Override

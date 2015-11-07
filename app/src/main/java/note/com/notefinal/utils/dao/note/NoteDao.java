@@ -90,8 +90,10 @@ public class NoteDao implements Dao<Note> {
 
                     if (view == View.FULL) {
                         String tagId = cursor.getString(cursor.getColumnIndex("TAG_ID"));
-                        Tag tag = tagDao.getItem(UUID.fromString(tagId), view);
-                        note.setTag(tag);
+                        if (tagId != null) {
+                            Tag tag = tagDao.getItem(UUID.fromString(tagId), view);
+                            note.setTag(tag);
+                        }
                     }
 
                     items.add(note);

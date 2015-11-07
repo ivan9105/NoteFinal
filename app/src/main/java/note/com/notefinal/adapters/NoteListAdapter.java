@@ -51,7 +51,7 @@ public class NoteListAdapter extends ArrayAdapter<Note> {
         ((TextView) view.findViewById(R.id.tagField)).setText(tag);
         ((TextView) view.findViewById(R.id.dateField)).setText(formattedDate);
 
-        return super.getView(position, convertView, parent);
+        return view;
     }
 
     private String getFormattedDate(Date date) {

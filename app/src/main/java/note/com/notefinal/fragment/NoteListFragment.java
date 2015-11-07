@@ -32,9 +32,9 @@ public class NoteListFragment extends ListFragment {
         int currentOrientation = getCurrentOrientation();
 
         if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
-            return inflater.inflate(R.layout.list_portrait, container);
+            return inflater.inflate(R.layout.list_portrait, container, false);
         } else {
-            return inflater.inflate(R.layout.list_landscape, container);
+            return inflater.inflate(R.layout.list_landscape, container, false);
         }
     }
 
@@ -46,8 +46,10 @@ public class NoteListFragment extends ListFragment {
     }
 
     private void setPosition() {
-        int position = getArguments().getInt("position");
-        getListView().setSelection(position);
+        if (getArguments() != null) {
+            int position = getArguments().getInt("position");
+            getListView().setSelection(position);
+        }
     }
 
     private void initAdapter() {
