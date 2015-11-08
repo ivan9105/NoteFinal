@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">NoteFinal</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="tag">Tag</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="add">Add note</string>
 </resources>

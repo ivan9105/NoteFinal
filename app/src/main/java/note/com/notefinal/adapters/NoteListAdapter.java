@@ -53,6 +53,9 @@ public class NoteListAdapter extends ArrayAdapter<Note> {
         ((TextView) view.findViewById(R.id.dateField)).setText(dateArr[0]);
         ((TextView) view.findViewById(R.id.timeField)).setText(dateArr[1]);
 
+        //Todo
+//        view.setOnLongClickListener();
+
         return view;
     }
 
