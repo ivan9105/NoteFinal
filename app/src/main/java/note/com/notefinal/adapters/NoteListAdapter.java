@@ -46,16 +46,18 @@ public class NoteListAdapter extends ArrayAdapter<Note> {
         String title = note.getTitle();
         String tag = (note.getTag() != null ? note.getTag().getName() : "");
         String formattedDate = getFormattedDate(note.getCreateTs());
+        String[] dateArr = formattedDate.split(" ");
 
         ((TextView) view.findViewById(R.id.titleField)).setText(title);
         ((TextView) view.findViewById(R.id.tagField)).setText(tag);
-        ((TextView) view.findViewById(R.id.dateField)).setText(formattedDate);
+        ((TextView) view.findViewById(R.id.dateField)).setText(dateArr[0]);
+        ((TextView) view.findViewById(R.id.timeField)).setText(dateArr[1]);
 
         return view;
     }
 
     private String getFormattedDate(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yy hh:mm", Locale.ENGLISH);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy hh:mm", Locale.ENGLISH);
         return sdf.format(date);
     }
 }
