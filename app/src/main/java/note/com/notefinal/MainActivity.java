@@ -29,7 +29,7 @@ public class MainActivity extends ActionBarActivity {
         initListFragment(savedInstanceState);
     }
 
-    private void initListFragment(Bundle savedInstanceState) {
+    public void initListFragment(Bundle savedInstanceState) {
         LogUtils.log(MainActivity.class, "init list fragment");
         listFragment = new NoteListFragment();
         currentFragment = NoteListFragment.NAME;

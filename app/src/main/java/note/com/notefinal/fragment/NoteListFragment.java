@@ -13,7 +13,7 @@ import java.util.List;
 import note.com.notefinal.R;
 import note.com.notefinal.adapters.NoteListAdapter;
 import note.com.notefinal.entity.Note;
-import note.com.notefinal.utils.dao.note.NoteDao;
+import note.com.notefinal.utils.dao.note.NoteDaoImpl;
 
 /**
  * Created by Иван on 27.10.2015.
@@ -21,10 +21,10 @@ import note.com.notefinal.utils.dao.note.NoteDao;
 public class NoteListFragment extends ListFragment {
     public static final String NAME = "noteList";
 
-    private NoteDao noteDao;
+    private NoteDaoImpl noteDao;
 
     public NoteListFragment() {
-        noteDao = new NoteDao();
+        noteDao = new NoteDaoImpl();
     }
 
     @Override

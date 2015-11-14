@@ -16,18 +16,19 @@ import note.com.notefinal.utils.DBUtils;
 import note.com.notefinal.utils.DateUtil;
 import note.com.notefinal.utils.dao.Dao;
 import note.com.notefinal.utils.dao.enums.View;
+import note.com.notefinal.utils.dao.tag.TagDaoImpl;
 
 /**
  * Created by Иван on 01.11.2015.
  */
-public class NoteDao implements Dao<Note> {
+public class NoteDaoImpl implements Dao<Note> {
     public static final String TABLE_NAME = "FINAL_NOTE";
     private SQLiteDatabase db;
-    private TagDao tagDao;
+    private TagDaoImpl tagDaoImpl;
 
-    public NoteDao() {
+    public NoteDaoImpl() {
         this.db = DBUtils.getDb();
-        this.tagDao = new TagDao();
+        this.tagDaoImpl = new TagDaoImpl();
     }
 
     @Override
@@ -91,7 +92,7 @@ public class NoteDao implements Dao<Note> {
                     if (view == View.FULL) {
                         String tagId = cursor.getString(cursor.getColumnIndex("TAG_ID"));
                         if (tagId != null) {
-                            Tag tag = tagDao.getItem(UUID.fromString(tagId), view);
+                            Tag tag = tagDaoImpl.getItem(UUID.fromString(tagId), view);
                             note.setTag(tag);
                         }
                     }
@@ -136,7 +137,7 @@ public class NoteDao implements Dao<Note> {
 
                     if (view == View.FULL) {
                         String tagId = cursor.getString(cursor.getColumnIndex("TAG_ID"));
-                        Tag tag = tagDao.getItem(UUID.fromString(tagId), view);
+                        Tag tag = tagDaoImpl.getItem(UUID.fromString(tagId), view);
                         note.setTag(tag);
                     }
 

@@ -1,4 +1,4 @@
-package note.com.notefinal.utils.dao.note;
+package note.com.notefinal.utils.dao.tag;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -17,12 +17,12 @@ import note.com.notefinal.utils.dao.enums.View;
 /**
  * Created by Иван on 02.11.2015.
  */
-public class TagDao implements Dao<Tag> {
+public class TagDaoImpl implements TagDao<Tag> {
     public static final String TABLE_NAME = "FINAL_TAG";
     private SQLiteDatabase db;
 
-    public TagDao() {
-        this.db = DBUtils.getDb();;
+    public TagDaoImpl() {
+        this.db = DBUtils.getDb();
     }
 
     @Override
@@ -132,5 +132,39 @@ public class TagDao implements Dao<Tag> {
         cv.put("ID", item.getId().toString());
         cv.put("NAME", item.getName());
         return cv;
+    }
+
+    @Nullable
+    @Override
+    public Tag findByName(String name, View view) {
+        Tag item = null;
+
+        db.beginTransaction();
+        try {
+            Cursor cursor = db.query(TABLE_NAME, new String[]{"ID", "NAME"},
+                    "NAME = ?", new String[] {name}, null, null, null);
+
+            if (cursor.moveToFirst()) {
+                while (!cursor.isAfterLast()) {
+                    UUID id = UUID.fromString(cursor.getString(cursor.getColumnIndex("ID")));
+
+                    Tag tag = new Tag();
+                    tag.setId(id);
+                    tag.setName(name);
+
+                    item = tag;
+
+                    cursor.moveToNext();
+                }
+            }
+
+            cursor.close();
+
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+
+        return item;
     }
 }

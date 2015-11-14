@@ -42,16 +42,23 @@
             android:id="@+id/tagLabel"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/tag"/>
+            android:text="@string/tag" />
 
-        <EditText
-            android:id="@+id/tagField"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:maxLines="1"
-            android:minLines="1"
-            />
+            android:layout_height="wrap_content">
+
+            <Spinner
+                android:id="@+id/tagField"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/addTag"
+                android:layout_width="16dp"
+                android:layout_height="fill_parent" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
