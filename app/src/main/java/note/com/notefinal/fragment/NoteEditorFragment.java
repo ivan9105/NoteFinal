@@ -2,6 +2,7 @@ package note.com.notefinal.fragment;
 
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -75,7 +76,7 @@ public class NoteEditorFragment extends Fragment {
             options.add(tag.getName());
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mainActivity.getBaseContext(),
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(mainActivity.getBaseContext(),
                 android.R.layout.simple_spinner_dropdown_item, options);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         tagField.setAdapter(adapter);
@@ -135,6 +136,51 @@ public class NoteEditorFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mainActivity.initListFragment(null);
+            }
+        });
+
+        addTagButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog dialog = new Dialog(mainActivity.getBaseContext());
+                dialog.setContentView(R.layout.tag_editor_dialog);
+                dialog.setTitle("Add tag");
+
+                final EditText tagField = (EditText) dialog.findViewById(R.id.nameField);
+                Button okButton = (Button) dialog.findViewById(R.id.ok);
+                Button cancelButton = (Button) dialog.findViewById(R.id.cancel);
+
+                okButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (tagField.getText() == null
+                                || tagField.getText().toString().length() == 0) {
+                            createDialog("Name can't be empty");
+                        } else {
+                            String name = tagField.getText().toString();
+                            Tag find = tagDaoImpl.findByName(name,
+                                    note.com.notefinal.utils.dao.enums.View.FULL);
+                            if (find != null) {
+                                createDialog(String.format("Tag with name '%s' already exists", find.getName()));
+                            } else {
+                                Tag tag = new Tag();
+                                tag.setId(UUID.randomUUID());
+                                tag.setName(name);
+                                tagDaoImpl.addItem(tag);
+                                dialog.dismiss();
+                            }
+                        }
+                    }
+                });
+
+                cancelButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
             }
         });
     }

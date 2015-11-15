@@ -6,7 +6,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import note.com.notefinal.fragment.NoteEditorFragment;
 import note.com.notefinal.fragment.NoteListFragment;
 import note.com.notefinal.utils.AppConfig;
 import note.com.notefinal.utils.DBUtils;
@@ -14,10 +16,11 @@ import note.com.notefinal.utils.LogUtils;
 
 
 public class MainActivity extends ActionBarActivity {
-    private FragmentTransaction fragmentTransaction;
     private NoteListFragment listFragment;
+    private NoteEditorFragment noteEditorFragment;
     private String currentFragment;
     private int position;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +39,26 @@ public class MainActivity extends ActionBarActivity {
 
         listFragment.setArguments(savedInstanceState);
 
-        try {
-            fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.content, listFragment, NoteListFragment.NAME);
-        } finally {
-            fragmentTransaction.commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, listFragment,
+                NoteListFragment.NAME).commit();
+
+        if (menu != null) {
+            menu.findItem(R.id.addItem).setVisible(true);
         }
+    }
+
+    public void initNoteEditor(Bundle savedInstanceState) {
+        LogUtils.log(MainActivity.class, "init note editor");
+        noteEditorFragment = new NoteEditorFragment();
+        currentFragment = NoteEditorFragment.NAME;
+
+        noteEditorFragment.setArguments(savedInstanceState);
+        noteEditorFragment.setMainActivity(this);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, noteEditorFragment,
+                NoteEditorFragment.NAME).commit();
+
+        menu.findItem(R.id.addItem).setVisible(false);
     }
 
     private void updateDbIfNeeded() {
@@ -56,24 +73,28 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.actions_menu, menu);
+        this.menu = menu;
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.addItem:
+                Toast.makeText(this, "Add item", Toast.LENGTH_SHORT)
+                        .show();
+                initNoteEditor(null);
+                menu.findItem(R.id.addItem).setVisible(false);
+                break;
+            default:
+                break;
         }
 
-        return super.onOptionsItemSelected(item);
+        return true;
     }
+
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
