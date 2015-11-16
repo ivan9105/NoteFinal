@@ -4,4 +4,8 @@
         android:id="@+id/addItem"
         android:title="@string/add"
         market_app:showAsAction="never" />
+    <item
+        android:id="@+id/settings"
+        android:title="@string/settings"
+        market_app:showAsAction="never" />
 </menu>

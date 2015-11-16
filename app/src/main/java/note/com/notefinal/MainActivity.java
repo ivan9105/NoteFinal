@@ -4,9 +4,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewConfiguration;
 import android.widget.Toast;
+
+import java.lang.reflect.Field;
 
 import note.com.notefinal.fragment.NoteEditorFragment;
 import note.com.notefinal.fragment.NoteListFragment;
@@ -30,6 +34,8 @@ public class MainActivity extends ActionBarActivity {
         updateDbIfNeeded();
         //init main fragment
         initListFragment(savedInstanceState);
+
+        makeActionOverflowMenuShown();
     }
 
     public void initListFragment(Bundle savedInstanceState) {
@@ -94,8 +100,6 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
-
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         if (NoteListFragment.NAME.equals(currentFragment)) {
@@ -104,5 +108,17 @@ public class MainActivity extends ActionBarActivity {
         super.onSaveInstanceState(outState);
     }
 
-
+    private void makeActionOverflowMenuShown() {
+        //devices with hardware menu button (e.g. Samsung Note) don't show action overflow menu
+        try {
+            ViewConfiguration config = ViewConfiguration.get(this);
+            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+            if (menuKeyField != null) {
+                menuKeyField.setAccessible(true);
+                menuKeyField.setBoolean(config, false);
+            }
+        } catch (Exception e) {
+            LogUtils.log(this.getClass(), e.getLocalizedMessage());
+        }
+    }
 }

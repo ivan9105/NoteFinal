@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -124,6 +125,9 @@ public class NoteEditorFragment extends Fragment {
 
                 item.setTitle(titleField.getText().toString());
                 item.setDescription(descField.getText().toString());
+                if (item.getCreateTs() == null) {
+                    item.setCreateTs(new Date());
+                }
 
                 item.setTag(tagDaoImpl.findByName(tagField.getSelectedItem().toString(),
                         note.com.notefinal.utils.dao.enums.View.FULL));
