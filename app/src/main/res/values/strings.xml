@@ -7,7 +7,8 @@
     <string name="tag">Tag</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-    <string name="add">Add note</string>
+    <string name="addNote">Add note</string>
+    <string name="add">Add</string>
     <string name="name">Name</string>
     <string name="settings">Settings</string>
 </resources>

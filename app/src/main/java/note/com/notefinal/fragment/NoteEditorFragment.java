@@ -146,7 +146,7 @@ public class NoteEditorFragment extends Fragment {
         addTagButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Dialog dialog = new Dialog(mainActivity.getBaseContext());
+                final Dialog dialog = new Dialog(mainActivity);
                 dialog.setContentView(R.layout.tag_editor_dialog);
                 dialog.setTitle("Add tag");
 
