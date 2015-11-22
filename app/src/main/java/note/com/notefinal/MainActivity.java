@@ -14,6 +14,7 @@ import java.lang.reflect.Field;
 
 import note.com.notefinal.fragment.NoteEditorFragment;
 import note.com.notefinal.fragment.NoteListFragment;
+import note.com.notefinal.fragment.NoteRemoveListFragment;
 import note.com.notefinal.utils.AppConfig;
 import note.com.notefinal.utils.DBUtils;
 import note.com.notefinal.utils.LogUtils;
@@ -22,6 +23,7 @@ import note.com.notefinal.utils.LogUtils;
 public class MainActivity extends ActionBarActivity {
     private NoteListFragment listFragment;
     private NoteEditorFragment noteEditorFragment;
+    private NoteRemoveListFragment noteRemoveListFragment;
     private String currentFragment;
     private int position;
     private Menu menu;
@@ -69,6 +71,21 @@ public class MainActivity extends ActionBarActivity {
         menu.findItem(R.id.removeItems).setVisible(false);
     }
 
+    public void initRemovedNoteList(Bundle savedInstanceState) {
+        LogUtils.log(MainActivity.class, "init note removed items fragment");
+        noteRemoveListFragment = new NoteRemoveListFragment();
+        currentFragment = NoteRemoveListFragment.NAME;
+
+        noteRemoveListFragment.setArguments(savedInstanceState);
+        noteRemoveListFragment.setMainActivity(this);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, noteRemoveListFragment,
+                NoteEditorFragment.NAME).commit();
+
+        menu.findItem(R.id.addItem).setVisible(false);
+        menu.findItem(R.id.removeItems).setVisible(false);
+    }
+
     private void updateDbIfNeeded() {
         LogUtils.log(MainActivity.class, "update db");
         int dbVersion = AppConfig.getDbVersion(getApplicationContext());
@@ -93,6 +110,13 @@ public class MainActivity extends ActionBarActivity {
                 Toast.makeText(this, "Add item", Toast.LENGTH_SHORT)
                         .show();
                 initNoteEditor(null);
+                menu.findItem(R.id.addItem).setVisible(false);
+                menu.findItem(R.id.removeItems).setVisible(false);
+                break;
+            case R.id.removeItems:
+                Toast.makeText(this, "Removed items", Toast.LENGTH_SHORT)
+                        .show();
+                initRemovedNoteList(null);
                 menu.findItem(R.id.addItem).setVisible(false);
                 menu.findItem(R.id.removeItems).setVisible(false);
                 break;
