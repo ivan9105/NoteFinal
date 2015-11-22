@@ -50,6 +50,7 @@ public class MainActivity extends ActionBarActivity {
 
         if (menu != null) {
             menu.findItem(R.id.addItem).setVisible(true);
+            menu.findItem(R.id.removeItems).setVisible(true);
         }
     }
 
@@ -65,6 +66,7 @@ public class MainActivity extends ActionBarActivity {
                 NoteEditorFragment.NAME).commit();
 
         menu.findItem(R.id.addItem).setVisible(false);
+        menu.findItem(R.id.removeItems).setVisible(false);
     }
 
     private void updateDbIfNeeded() {
@@ -92,6 +94,7 @@ public class MainActivity extends ActionBarActivity {
                         .show();
                 initNoteEditor(null);
                 menu.findItem(R.id.addItem).setVisible(false);
+                menu.findItem(R.id.removeItems).setVisible(false);
                 break;
             default:
                 break;

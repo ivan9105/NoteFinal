@@ -2,8 +2,12 @@
     xmlns:market_app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/addItem"
-        android:title="@string/addNote"
-        market_app:showAsAction="never" />
+        android:title="@string/add"
+        market_app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/removeItems"
+        android:title="@string/remove"
+        market_app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/settings"
         android:title="@string/settings"
