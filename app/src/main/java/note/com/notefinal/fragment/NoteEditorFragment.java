@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -150,18 +151,18 @@ public class NoteEditorFragment extends Fragment {
                 dialog.setContentView(R.layout.tag_editor_dialog);
                 dialog.setTitle("Add tag");
 
-                final EditText tagField = (EditText) dialog.findViewById(R.id.nameField);
+                final EditText tagEdit = (EditText) dialog.findViewById(R.id.nameField);
                 Button okButton = (Button) dialog.findViewById(R.id.ok);
                 Button cancelButton = (Button) dialog.findViewById(R.id.cancel);
 
                 okButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (tagField.getText() == null
-                                || tagField.getText().toString().length() == 0) {
+                        if (tagEdit.getText() == null
+                                || tagEdit.getText().toString().length() == 0) {
                             createDialog("Name can't be empty");
                         } else {
-                            String name = tagField.getText().toString();
+                            String name = tagEdit.getText().toString();
                             Tag find = tagDaoImpl.findByName(name,
                                     note.com.notefinal.utils.dao.enums.View.FULL);
                             if (find != null) {
@@ -172,6 +173,10 @@ public class NoteEditorFragment extends Fragment {
                                 tag.setName(name);
                                 tagDaoImpl.addItem(tag);
                                 dialog.dismiss();
+
+                                ArrayAdapter<String> adapter = (ArrayAdapter) tagField.getAdapter();
+                                adapter.add(name);
+                                adapter.notifyDataSetChanged();
                             }
                         }
                     }

@@ -163,7 +163,7 @@ public class NoteDaoImpl implements Dao<Note> {
         cv.put("TITLE", item.getTitle());
         cv.put("DESCRIPTION", item.getDescription());
         cv.put("CREATE_TS", DateUtil.toString(item.getCreateTs()));
-        cv.put("TAG_ID", item.getId().toString());
+        cv.put("TAG_ID", item.getTag().getId().toString());
         return cv;
     }
 }
