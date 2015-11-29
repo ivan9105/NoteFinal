@@ -46,6 +46,7 @@ public class MainActivity extends ActionBarActivity {
         currentFragment = NoteListFragment.NAME;
 
         listFragment.setArguments(savedInstanceState);
+        listFragment.setMainActivity(this);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.content, listFragment,
                 NoteListFragment.NAME).commit();
