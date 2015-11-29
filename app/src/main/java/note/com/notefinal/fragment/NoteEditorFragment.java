@@ -123,22 +123,15 @@ public class NoteEditorFragment extends Fragment {
     private boolean validateFields() {
         boolean res = true;
         StringBuilder sb = new StringBuilder();
-        sb.append("Fields:").append("\n");
 
         if (titleField.getText() == null || titleField.getText().length() == 0) {
-            sb.append(" title, ");
-            res = false;
-        }
-
-        if (descField.getText() == null || descField.getText().length() == 0) {
-            sb.append(" description, ");
+            sb.append(" Title");
             res = false;
         }
 
         if (!res) {
             String message = sb.toString();
-            message = message.substring(0, message.lastIndexOf(", "));
-            message = String.format("%s %s", message, "can't be empty");
+            message = String.format("%s %s", message, "can't be empty, continue edit?");
             createDialog(message);
         }
 
@@ -147,13 +140,22 @@ public class NoteEditorFragment extends Fragment {
 
     private void createDialog(String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(message)
-                .setCancelable(false).setNegativeButton("Close", new DialogInterface.OnClickListener() {
+        builder.setTitle(message).setCancelable(false);
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
         });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mainActivity.initListFragment(null);
+            }
+        });
+
         AlertDialog alert = builder.create();
         alert.show();
 
