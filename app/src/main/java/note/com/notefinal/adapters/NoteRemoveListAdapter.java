@@ -2,6 +2,7 @@ package note.com.notefinal.adapters;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -17,14 +19,15 @@ import note.com.notefinal.R;
 import note.com.notefinal.entity.Note;
 
 /**
- * Created by Иван on 31.10.2015.
+ * Created by Иван on 28.11.2015.
  */
-public class NoteListAdapter extends ArrayAdapter<Note> {
+public class NoteRemoveListAdapter extends ArrayAdapter<Note> {
     private Context ctx;
     private List<Note> data;
     private int currentOrientation;
+    private List<Note> selected = new ArrayList<>();
 
-    public NoteListAdapter(Context ctx, List<Note> data, int currentOrientation) {
+    public NoteRemoveListAdapter(Context ctx, List<Note> data, int currentOrientation) {
         super(ctx, R.layout.note_portrait, data);
         this.ctx = ctx;
         this.data = data;
@@ -53,7 +56,15 @@ public class NoteListAdapter extends ArrayAdapter<Note> {
         ((TextView) view.findViewById(R.id.dateField)).setText(dateArr[0]);
         ((TextView) view.findViewById(R.id.timeField)).setText(dateArr[1]);
 
+        if (selected.contains(note)) {
+            view.setBackgroundColor(Color.parseColor("#D5F3F9"));
+        }
+
         return view;
+    }
+
+    public List<Note> getSelected() {
+        return selected;
     }
 
     private String getFormattedDate(Date date) {
