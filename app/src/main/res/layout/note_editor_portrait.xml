@@ -34,9 +34,10 @@
             android:id="@+id/descField"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
-            android:maxLines="6"
-            android:minLines="6" />
+            android:inputType="textMultiLine"
+            android:gravity="top"
+            android:maxLines="10"
+            android:minLines="10" />
 
         <TextView
             android:id="@+id/tagLabel"
@@ -54,35 +55,6 @@
                 android:id="@+id/tagField"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content" />
-
-            <Button
-                android:id="@+id/addTag"
-                android:layout_width="wrap_content"
-                android:text="@string/add"
-                android:layout_height="fill_parent" />
         </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/button_panel"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:minHeight="60dp"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/ok"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="@string/ok" />
-
-        <Button
-            android:id="@+id/cancel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="@string/cancel" />
     </LinearLayout>
 </RelativeLayout>

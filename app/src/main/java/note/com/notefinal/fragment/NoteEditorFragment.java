@@ -4,7 +4,6 @@ package note.com.notefinal.fragment;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,7 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,20 +47,13 @@ public class NoteEditorFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view;
+        View view = inflater.inflate(R.layout.note_editor_portrait, container, false);
 
         noteDao = new NoteDaoImpl();
         tagDaoImpl = new TagDaoImpl();
 
-        if (getCurrentOrientation() == Configuration.ORIENTATION_PORTRAIT) {
-            view = inflater.inflate(R.layout.note_editor_portrait, container, false);
-        } else {
-            view = inflater.inflate(R.layout.note_editor_landscape, container, false);
-        }
-
         initFields(view);
         setItem();
-        initActions(view);
 
         return view;
     }
@@ -95,103 +86,38 @@ public class NoteEditorFragment extends Fragment {
         }
     }
 
-    private void initActions(View view) {
-        Button okButton = (Button) view.findViewById(R.id.ok);
-        Button cancelButton = (Button) view.findViewById(R.id.cancel);
-        Button addTagButton = (Button) view.findViewById(R.id.addTag);
-
-        okButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (validateFields()) {
-                    Note note = assembleItem();
-                    if (isNew) {
-                        noteDao.addItem(note);
-                    } else {
-                        noteDao.updateItem(note);
-                    }
-                    mainActivity.initListFragment(null);
-                }
+    public void commit() {
+        if (validateFields()) {
+            Note note = assembleItem();
+            if (isNew) {
+                noteDao.addItem(note);
+            } else {
+                noteDao.updateItem(note);
             }
+            mainActivity.initListFragment(null);
+        }
+    }
 
-            private Note assembleItem() {
-                Note item;
+    private Note assembleItem() {
+        Note item;
 
-                if (!isNew) {
-                    item = getArguments().getParcelable("item");
-                } else {
-                    item = new Note();
-                    item.setId(UUID.randomUUID());
-                }
+        if (!isNew) {
+            item = getArguments().getParcelable("item");
+        } else {
+            item = new Note();
+            item.setId(UUID.randomUUID());
+        }
 
-                item.setTitle(titleField.getText().toString());
-                item.setDescription(descField.getText().toString());
-                if (item.getCreateTs() == null) {
-                    item.setCreateTs(new Date());
-                }
+        item.setTitle(titleField.getText().toString());
+        item.setDescription(descField.getText().toString());
+        if (item.getCreateTs() == null) {
+            item.setCreateTs(new Date());
+        }
 
-                item.setTag(tagDaoImpl.findByName(tagField.getSelectedItem().toString(),
-                        note.com.notefinal.utils.dao.enums.View.FULL));
+        item.setTag(tagDaoImpl.findByName(tagField.getSelectedItem().toString(),
+                note.com.notefinal.utils.dao.enums.View.FULL));
 
-                return item;
-            }
-        });
-
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mainActivity.initListFragment(null);
-            }
-        });
-
-        addTagButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Dialog dialog = new Dialog(mainActivity);
-                dialog.setContentView(R.layout.tag_editor_dialog);
-                dialog.setTitle("Add tag");
-
-                final EditText tagEdit = (EditText) dialog.findViewById(R.id.nameField);
-                Button okButton = (Button) dialog.findViewById(R.id.ok);
-                Button cancelButton = (Button) dialog.findViewById(R.id.cancel);
-
-                okButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (tagEdit.getText() == null
-                                || tagEdit.getText().toString().length() == 0) {
-                            createDialog("Name can't be empty");
-                        } else {
-                            String name = tagEdit.getText().toString();
-                            Tag find = tagDaoImpl.findByName(name,
-                                    note.com.notefinal.utils.dao.enums.View.FULL);
-                            if (find != null) {
-                                createDialog(String.format("Tag with name '%s' already exists", find.getName()));
-                            } else {
-                                Tag tag = new Tag();
-                                tag.setId(UUID.randomUUID());
-                                tag.setName(name);
-                                tagDaoImpl.addItem(tag);
-                                dialog.dismiss();
-
-                                ArrayAdapter<String> adapter = (ArrayAdapter) tagField.getAdapter();
-                                adapter.add(name);
-                                adapter.notifyDataSetChanged();
-                            }
-                        }
-                    }
-                });
-
-                cancelButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-
-                dialog.show();
-            }
-        });
+        return item;
     }
 
     private boolean validateFields() {
