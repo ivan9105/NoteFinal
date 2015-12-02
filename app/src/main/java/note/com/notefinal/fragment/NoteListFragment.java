@@ -33,13 +33,7 @@ public class NoteListFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        int currentOrientation = getCurrentOrientation();
-
-        if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
-            return inflater.inflate(R.layout.list_portrait, container, false);
-        } else {
-            return inflater.inflate(R.layout.list_landscape, container, false);
-        }
+        return inflater.inflate(R.layout.list_portrait, container, false);
     }
 
     @Override
@@ -47,7 +41,7 @@ public class NoteListFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
         final List<Note> data = noteDao.getItems(note.com.notefinal.utils.dao.enums.View.FULL);
         NoteListAdapter adapter = new NoteListAdapter(
-                getActivity().getApplicationContext(), data, getCurrentOrientation());
+                getActivity().getApplicationContext(), data);
         setListAdapter(adapter);
 
         ListView listView = getListView();
@@ -69,10 +63,6 @@ public class NoteListFragment extends ListFragment {
             int position = getArguments().getInt("position");
             listView.setSelection(position);
         }
-    }
-
-    private int getCurrentOrientation() {
-        return getResources().getConfiguration().orientation;
     }
 
     public int getCurrentPosition() {

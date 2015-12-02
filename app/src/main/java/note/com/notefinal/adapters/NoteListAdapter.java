@@ -22,25 +22,19 @@ import note.com.notefinal.entity.Note;
 public class NoteListAdapter extends ArrayAdapter<Note> {
     private Context ctx;
     private List<Note> data;
-    private int currentOrientation;
 
-    public NoteListAdapter(Context ctx, List<Note> data, int currentOrientation) {
+    public NoteListAdapter(Context ctx, List<Note> data) {
         super(ctx, R.layout.note_portrait, data);
         this.ctx = ctx;
         this.data = data;
-        this.currentOrientation = currentOrientation;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) ctx
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View view;
-        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-            view = inflater.inflate(R.layout.note_landscape, parent, false);
-        } else {
-            view = inflater.inflate(R.layout.note_portrait, parent, false);
-        }
+        View view = inflater.inflate(R.layout.note_portrait, parent, false);
+
         Note note = data.get(position);
 
         String title = note.getTitle();

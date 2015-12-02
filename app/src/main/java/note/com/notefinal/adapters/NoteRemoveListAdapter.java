@@ -38,12 +38,7 @@ public class NoteRemoveListAdapter extends ArrayAdapter<Note> {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) ctx
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View view;
-        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-            view = inflater.inflate(R.layout.note_landscape, parent, false);
-        } else {
-            view = inflater.inflate(R.layout.note_portrait, parent, false);
-        }
+        final View view = inflater.inflate(R.layout.note_portrait, parent, false);
         Note note = data.get(position);
 
         String title = note.getTitle();
