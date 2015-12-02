@@ -42,7 +42,7 @@ public class NoteRemoveListFragment extends ListFragment {
 
         final List<Note> data = noteDao.getItems(note.com.notefinal.utils.dao.enums.View.FULL);
         final NoteRemoveListAdapter adapter = new NoteRemoveListAdapter(
-                getActivity().getApplicationContext(), data, getCurrentOrientation());
+                getActivity().getApplicationContext(), data);
         setListAdapter(adapter);
 
         ListView list = getListView();
@@ -89,10 +89,6 @@ public class NoteRemoveListFragment extends ListFragment {
                 }
             });
         }
-    }
-
-    private int getCurrentOrientation() {
-        return getResources().getConfiguration().orientation;
     }
 
     public void setMainActivity(MainActivity mainActivity) {

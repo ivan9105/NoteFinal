@@ -22,16 +22,16 @@ import note.com.notefinal.entity.Note;
  * Created by Иван on 28.11.2015.
  */
 public class NoteRemoveListAdapter extends ArrayAdapter<Note> {
+    public static final int MAX_TITLE_LENGTH = 70;
+
     private Context ctx;
     private List<Note> data;
-    private int currentOrientation;
     private List<Note> selected = new ArrayList<>();
 
-    public NoteRemoveListAdapter(Context ctx, List<Note> data, int currentOrientation) {
+    public NoteRemoveListAdapter(Context ctx, List<Note> data) {
         super(ctx, R.layout.note_portrait, data);
         this.ctx = ctx;
         this.data = data;
-        this.currentOrientation = currentOrientation;
     }
 
     @Override
@@ -42,6 +42,9 @@ public class NoteRemoveListAdapter extends ArrayAdapter<Note> {
         Note note = data.get(position);
 
         String title = note.getTitle();
+        if (title.length() > MAX_TITLE_LENGTH) {
+            title = String.format("%s%s", title.substring(0, MAX_TITLE_LENGTH - 3), "...");
+        }
         String tag = (note.getTag() != null ? note.getTag().getName() : "");
         String formattedDate = getFormattedDate(note.getCreateTs());
         String[] dateArr = formattedDate.split(" ");

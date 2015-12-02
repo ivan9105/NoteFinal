@@ -20,6 +20,7 @@ import note.com.notefinal.entity.Note;
  * Created by Иван on 31.10.2015.
  */
 public class NoteListAdapter extends ArrayAdapter<Note> {
+    public static final int MAX_TITLE_LENGTH = 70;
     private Context ctx;
     private List<Note> data;
 
@@ -38,6 +39,9 @@ public class NoteListAdapter extends ArrayAdapter<Note> {
         Note note = data.get(position);
 
         String title = note.getTitle();
+        if (title.length() > MAX_TITLE_LENGTH) {
+            title = String.format("%s%s", title.substring(0, MAX_TITLE_LENGTH - 3), "...");
+        }
         String tag = (note.getTag() != null ? note.getTag().getName() : "");
         String formattedDate = getFormattedDate(note.getCreateTs());
         String[] dateArr = formattedDate.split(" ");
