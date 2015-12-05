@@ -14,7 +14,6 @@ public class Note implements Parcelable {
     private String title;
     private String description;
     private Date createTs;
-    private Tag tag;
 
     public Note() {
     }
@@ -22,10 +21,6 @@ public class Note implements Parcelable {
     public Note(Parcel source) {
         String[] data = new String[5];
         source.readStringArray(data);
-
-        this.tag = new Tag();
-        tag.setId(UUID.fromString(data[3]));
-        tag.setName(data[4]);
 
         this.id = UUID.fromString(data[0]);
         this.title = data[1];
@@ -65,14 +60,6 @@ public class Note implements Parcelable {
         this.createTs = createTs;
     }
 
-    public Tag getTag() {
-        return tag;
-    }
-
-    public void setTag(Tag tag) {
-        this.tag = tag;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -83,9 +70,7 @@ public class Note implements Parcelable {
         dest.writeStringArray(new String[]{
                 String.valueOf(id),
                 title,
-                description,
-                String.valueOf(tag.getId()),
-                tag.getName()
+                description
         });
         dest.writeLong(createTs.getTime());
     }

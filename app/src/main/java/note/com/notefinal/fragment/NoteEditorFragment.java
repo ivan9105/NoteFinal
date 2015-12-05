@@ -24,9 +24,7 @@ import java.util.UUID;
 import note.com.notefinal.MainActivity;
 import note.com.notefinal.R;
 import note.com.notefinal.entity.Note;
-import note.com.notefinal.entity.Tag;
 import note.com.notefinal.utils.dao.note.NoteDaoImpl;
-import note.com.notefinal.utils.dao.tag.TagDaoImpl;
 
 /**
  * Created by Иван on 08.11.2015.
@@ -35,14 +33,11 @@ public class NoteEditorFragment extends Fragment {
     public static final String NAME = "noteEditor";
 
     private EditText titleField, descField;
-    private Spinner tagField;
     private Note item;
 
     private MainActivity mainActivity;
 
     private NoteDaoImpl noteDao;
-    private TagDaoImpl tagDaoImpl;
-
     private boolean isNew;
 
     @Override
@@ -50,7 +45,6 @@ public class NoteEditorFragment extends Fragment {
         View view = inflater.inflate(R.layout.note_editor_portrait, container, false);
 
         noteDao = new NoteDaoImpl();
-        tagDaoImpl = new TagDaoImpl();
 
         initFields(view);
         setItem();
@@ -61,18 +55,6 @@ public class NoteEditorFragment extends Fragment {
     private void initFields(View view) {
         titleField = (EditText) view.findViewById(R.id.titleField);
         descField = (EditText) view.findViewById(R.id.descField);
-
-        tagField = (Spinner) view.findViewById(R.id.tagField);
-        List<Tag> tags = tagDaoImpl.getItems(note.com.notefinal.utils.dao.enums.View.FULL);
-        List<String> options = new ArrayList<>();
-        for (Tag tag : tags) {
-            options.add(tag.getName());
-        }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(mainActivity.getBaseContext(),
-                android.R.layout.simple_spinner_dropdown_item, options);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        tagField.setAdapter(adapter);
     }
 
     private void setItem() {
@@ -113,9 +95,6 @@ public class NoteEditorFragment extends Fragment {
         if (item.getCreateTs() == null) {
             item.setCreateTs(new Date());
         }
-
-        item.setTag(tagDaoImpl.findByName(tagField.getSelectedItem().toString(),
-                note.com.notefinal.utils.dao.enums.View.FULL));
 
         return item;
     }

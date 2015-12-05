@@ -11,12 +11,10 @@ import java.util.List;
 import java.util.UUID;
 
 import note.com.notefinal.entity.Note;
-import note.com.notefinal.entity.Tag;
 import note.com.notefinal.utils.DBUtils;
 import note.com.notefinal.utils.DateUtil;
 import note.com.notefinal.utils.dao.Dao;
 import note.com.notefinal.utils.dao.enums.View;
-import note.com.notefinal.utils.dao.tag.TagDaoImpl;
 
 /**
  * Created by Иван on 01.11.2015.
@@ -24,11 +22,9 @@ import note.com.notefinal.utils.dao.tag.TagDaoImpl;
 public class NoteDaoImpl implements Dao<Note> {
     public static final String TABLE_NAME = "FINAL_NOTE";
     private SQLiteDatabase db;
-    private TagDaoImpl tagDaoImpl;
 
     public NoteDaoImpl() {
         this.db = DBUtils.getDb();
-        this.tagDaoImpl = new TagDaoImpl();
     }
 
     @Override
@@ -74,7 +70,7 @@ public class NoteDaoImpl implements Dao<Note> {
         db.beginTransaction();
         try {
             Cursor cursor = db.query(TABLE_NAME, new String[]{"ID", "TITLE", "DESCRIPTION",
-                    "CREATE_TS", "TAG_ID"}, null, null, null, null, null);
+                    "CREATE_TS"}, null, null, null, null, null);
 
             if (cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
@@ -88,14 +84,6 @@ public class NoteDaoImpl implements Dao<Note> {
                     note.setTitle(title);
                     note.setDescription(description);
                     note.setCreateTs(createTs);
-
-                    if (view == View.FULL) {
-                        String tagId = cursor.getString(cursor.getColumnIndex("TAG_ID"));
-                        if (tagId != null) {
-                            Tag tag = tagDaoImpl.getItem(UUID.fromString(tagId), view);
-                            note.setTag(tag);
-                        }
-                    }
 
                     items.add(note);
 
@@ -121,7 +109,7 @@ public class NoteDaoImpl implements Dao<Note> {
         db.beginTransaction();
         try {
             Cursor cursor = db.query(TABLE_NAME, new String[]{"ID", "TITLE", "DESCRIPTION",
-                    "CREATE_TS", "TAG_ID"}, "ID = ?", new String[] {id.toString()}, null, null, null);
+                    "CREATE_TS"}, "ID = ?", new String[] {id.toString()}, null, null, null);
 
             if (cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
@@ -134,12 +122,6 @@ public class NoteDaoImpl implements Dao<Note> {
                     note.setTitle(title);
                     note.setDescription(description);
                     note.setCreateTs(createTs);
-
-                    if (view == View.FULL) {
-                        String tagId = cursor.getString(cursor.getColumnIndex("TAG_ID"));
-                        Tag tag = tagDaoImpl.getItem(UUID.fromString(tagId), view);
-                        note.setTag(tag);
-                    }
 
                     item = note;
 
@@ -163,7 +145,6 @@ public class NoteDaoImpl implements Dao<Note> {
         cv.put("TITLE", item.getTitle());
         cv.put("DESCRIPTION", item.getDescription());
         cv.put("CREATE_TS", DateUtil.toString(item.getCreateTs()));
-        cv.put("TAG_ID", item.getTag().getId().toString());
         return cv;
     }
 }
