@@ -3,11 +3,11 @@
     <item
         android:id="@+id/addItem"
         android:title="@string/add"
-        market_app:showAsAction="ifRoom" />
+        market_app:showAsAction="always" />
     <item
         android:id="@+id/removeItems"
         android:title="@string/remove"
-        market_app:showAsAction="ifRoom"/>
+        market_app:showAsAction="always"/>
     <item
         android:id="@+id/settings"
         android:title="@string/settings"
