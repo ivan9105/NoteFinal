@@ -5,7 +5,7 @@
         <item name="colorPrimary">@color/actionBar_background</item>
     </style>
 
-    <color name="actionBar_background">#ff9effa1</color>
+    <color name="actionBar_background">#2386ff89</color>
     <color name="background">#ffefefef</color>
     <color name="background_selected">#D5F3F9</color>
     <color name="border_color">#ffff9797</color>
