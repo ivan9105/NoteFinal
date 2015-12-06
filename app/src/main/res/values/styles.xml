@@ -5,4 +5,7 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <color name="background">#ffefefef</color>
+    <color name="background_selected">#D5F3F9</color>
+    <color name="border_color">#ffff9797</color>
 </resources>

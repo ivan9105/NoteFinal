@@ -43,11 +43,9 @@ public class NoteListAdapter extends ArrayAdapter<Note> {
             title = String.format("%s%s", title.substring(0, MAX_TITLE_LENGTH - 3), "...");
         }
         String formattedDate = getFormattedDate(note.getCreateTs());
-        String[] dateArr = formattedDate.split(" ");
 
         ((TextView) view.findViewById(R.id.titleField)).setText(title);
-        ((TextView) view.findViewById(R.id.dateField)).setText(dateArr[0]);
-        ((TextView) view.findViewById(R.id.timeField)).setText(dateArr[1]);
+        ((TextView) view.findViewById(R.id.dateField)).setText(formattedDate);
 
         return view;
     }

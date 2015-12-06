@@ -3,10 +3,13 @@ package note.com.notefinal.adapters;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -50,10 +53,15 @@ public class NoteRemoveListAdapter extends ArrayAdapter<Note> {
 
         ((TextView) view.findViewById(R.id.titleField)).setText(title);
         ((TextView) view.findViewById(R.id.dateField)).setText(dateArr[0]);
-        ((TextView) view.findViewById(R.id.timeField)).setText(dateArr[1]);
 
         if (selected.contains(note)) {
-            view.setBackgroundColor(Color.parseColor("#D5F3F9"));
+            Drawable background = ctx.getResources().getDrawable(R.drawable.background_selected);
+            int sdk = android.os.Build.VERSION.SDK_INT;
+            if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                view.setBackgroundDrawable(background);
+            } else {
+                view.setBackground(background);
+            }
         }
 
         return view;
