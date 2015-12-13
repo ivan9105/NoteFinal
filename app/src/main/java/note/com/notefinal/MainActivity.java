@@ -38,6 +38,8 @@ public class MainActivity extends ActionBarActivity {
         initListFragment(savedInstanceState);
 
         makeActionOverflowMenuShown();
+
+        getSupportActionBar().setTitle("");
     }
 
     public void initListFragment(Bundle savedInstanceState) {
