@@ -2,6 +2,7 @@ package note.com.notefinal;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,7 +40,11 @@ public class MainActivity extends ActionBarActivity {
 
         makeActionOverflowMenuShown();
 
-        getSupportActionBar().setTitle("");
+        ActionBar supportActionBar = getSupportActionBar();
+        supportActionBar.setTitle("");
+        supportActionBar.setDisplayShowHomeEnabled(true);
+        supportActionBar.setLogo(R.drawable.icon);
+        supportActionBar.setDisplayUseLogoEnabled(true);
     }
 
     public void initListFragment(Bundle savedInstanceState) {
