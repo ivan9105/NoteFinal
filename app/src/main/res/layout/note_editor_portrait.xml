@@ -30,13 +30,14 @@
             android:layout_height="wrap_content"
             android:text="@string/description" />
 
-        <EditText
+        <note.com.notefinal.components.LinedEditText
             android:id="@+id/descField"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
             android:gravity="top"
             android:maxLines="1000"
+            android:textSize="18sp"
             android:minLines="1000" />
     </LinearLayout>
 </RelativeLayout>

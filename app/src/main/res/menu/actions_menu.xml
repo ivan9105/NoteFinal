@@ -3,12 +3,12 @@
     <item
         android:id="@+id/addItem"
         android:title="@string/add"
-        android:icon="@mipmap/ic_note_add_black_24dp"
+        android:icon="@mipmap/ic_library_add_white_24dp"
         market_app:showAsAction="always" />
     <item
         android:id="@+id/removeItems"
         android:title="@string/remove"
-        android:icon="@mipmap/ic_delete_black_24dp"
+        android:icon="@mipmap/ic_delete_white_24dp"
         market_app:showAsAction="always"/>
     <item
         android:id="@+id/settings"
