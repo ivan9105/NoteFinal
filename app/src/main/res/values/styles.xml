@@ -3,10 +3,12 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light">
         <item name="colorPrimary">@color/actionBar_background</item>
+        <item name="actionMenuTextColor">@color/white</item>
     </style>
 
-    <color name="actionBar_background">#ff8eff82</color>
-    <color name="background">#ffefefef</color>
+    <color name="actionBar_background">#ff8eff32</color>
+    <color name="background">#ffeeeeee</color>
     <color name="background_selected">#D5F3F9</color>
     <color name="border_color">#ffff9797</color>
+    <color name="white">#FFFFFF</color>
 </resources>
