@@ -2,7 +2,6 @@ package note.com.notefinal.fragment;
 
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,14 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 import note.com.notefinal.MainActivity;
@@ -59,19 +53,44 @@ public class NoteEditorFragment extends Fragment {
         descField = (EditText) view.findViewById(R.id.descField);
 
         descField.addTextChangedListener(new TextWatcher() {
+            private boolean change = true;
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                //Todo cut long words
+                if (change) {
+                    String text = s.toString();
+                    String[] words = text.split(" ");
+                    StringBuilder sb = new StringBuilder();
+
+                    boolean exist = false;
+                    for (String word : words) {
+                        if (word.length() < 20) {
+                            sb.append(word).append(" ");
+                        } else {
+                            exist = true;
+                            String first = word.substring(0, 19);
+                            String second = word.substring(19, word.length());
+                            sb.append(first).append(" ").append(second);
+                        }
+                    }
+
+                    if (exist) {
+                        String newText = sb.toString().trim();
+                        change = false;
+                        descField.setText(newText);
+                    }
+                } else {
+                    descField.setSelection(descField.length());
+                    change = true;
+                }
             }
         });
     }
