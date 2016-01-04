@@ -4,11 +4,17 @@
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light">
         <item name="colorPrimary">@color/actionBar_background</item>
         <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:itemTextAppearance">@style/myCustomMenuTextApearance</item>
     </style>
 
-    <color name="black">#ff373737</color>
+    <style name="myCustomMenuTextApearance" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <color name="black">#000000</color>
+    <color name="gray">#ff373737</color>
     <color name="white">#FFFFFF</color>
-    <color name="actionBar_background">#ffc2ff0b</color>
+    <color name="actionBar_background">#ff96e6f3</color>
     <color name="background">#ffeeeeee</color>
     <color name="background_selected">#D5F3F9</color>
     <color name="border_color">#ffff9797</color>
