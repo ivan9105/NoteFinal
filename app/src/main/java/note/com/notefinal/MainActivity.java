@@ -1,5 +1,7 @@
 package note.com.notefinal;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -115,6 +117,10 @@ public class MainActivity extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.actions_menu, menu);
         this.menu = menu;
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+
+
         return true;
     }
 
