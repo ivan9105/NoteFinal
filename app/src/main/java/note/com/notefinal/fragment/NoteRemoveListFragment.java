@@ -40,7 +40,7 @@ public class NoteRemoveListFragment extends ListFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        final List<Note> data = noteDao.getItems(note.com.notefinal.utils.dao.enums.View.FULL);
+        final List<Note> data = noteDao.getItems();
         final NoteRemoveListAdapter adapter = new NoteRemoveListAdapter(
                 getActivity().getApplicationContext(), data);
         setListAdapter(adapter);

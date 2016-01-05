@@ -1,6 +1,5 @@
 package note.com.notefinal.fragment;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
@@ -39,7 +38,7 @@ public class NoteListFragment extends ListFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        final List<Note> data = noteDao.getItems(note.com.notefinal.utils.dao.enums.View.FULL);
+        final List<Note> data = noteDao.getItems();
         NoteListAdapter adapter = new NoteListAdapter(
                 getActivity().getApplicationContext(), data);
         setListAdapter(adapter);
@@ -71,5 +70,19 @@ public class NoteListFragment extends ListFragment {
 
     public void setMainActivity(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
+    }
+
+    public void filterItems(@Nullable String param) {
+        List<Note> notes;
+        if (param == null || param.equals("")) {
+            notes = noteDao.getItems();
+        } else {
+            notes = noteDao.getItems(param);
+        }
+
+        NoteListAdapter adapter = (NoteListAdapter) getListAdapter();
+        adapter.clear();
+        adapter.addAll(notes);
+        adapter.notifyDataSetChanged();
     }
 }

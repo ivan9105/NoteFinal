@@ -2,7 +2,6 @@ package note.com.notefinal;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.support.v7.widget.SearchView;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.Toast;
 
@@ -33,6 +31,8 @@ public class MainActivity extends ActionBarActivity {
     private String currentFragment;
     private int position;
     private Menu menu;
+    private boolean searchIsEmpty = true;
+    private SearchView searchView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,23 +128,27 @@ public class MainActivity extends ActionBarActivity {
         getMenuInflater().inflate(R.menu.actions_menu, menu);
         this.menu = menu;
 
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        final SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                //Todo there is logic by filter
-                Toast.makeText(getBaseContext(), searchView.getQuery(), Toast.LENGTH_LONG).show();
+                if (listFragment != null) {
+                    listFragment.filterItems(searchView.getQuery().toString());
+                }
+                searchIsEmpty = false;
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
                 if (s.equals("")) {
-                    //Todo logic clear filter
-                    Toast.makeText(getBaseContext(), "CLEAR", Toast.LENGTH_LONG).show();
+                    searchIsEmpty = true;
+                    if (listFragment != null) {
+                        listFragment.filterItems(null);
+                    }
                 }
                 return false;
             }
@@ -153,8 +157,11 @@ public class MainActivity extends ActionBarActivity {
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                ////Todo logic clear filter
-                Toast.makeText(getBaseContext(), "CLOSE", Toast.LENGTH_LONG).show();
+                if (!searchIsEmpty) {
+                    if (listFragment != null) {
+                        listFragment.filterItems(null);
+                    }
+                }
                 return false;
             }
         });
@@ -174,6 +181,7 @@ public class MainActivity extends ActionBarActivity {
                 menu.findItem(R.id.addItem).setVisible(false);
                 menu.findItem(R.id.removeItems).setVisible(false);
                 menu.findItem(R.id.menu_search).setVisible(false);
+                searchView.onActionViewCollapsed();
                 break;
             case R.id.removeItems:
                 Toast.makeText(this, "Removed items", Toast.LENGTH_SHORT)
@@ -182,6 +190,7 @@ public class MainActivity extends ActionBarActivity {
                 menu.findItem(R.id.addItem).setVisible(false);
                 menu.findItem(R.id.removeItems).setVisible(false);
                 menu.findItem(R.id.menu_search).setVisible(false);
+                searchView.onActionViewCollapsed();
                 break;
             default:
                 break;

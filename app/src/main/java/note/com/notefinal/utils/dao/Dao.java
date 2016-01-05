@@ -14,7 +14,7 @@ public interface Dao<T> {
     void addItem(T item);
     void updateItem(T item);
     void removeItem(T item);
-    List<T> getItems(View view);
+    List<T> getItems();
     @Nullable
     T getItem(UUID id, View view);
 }

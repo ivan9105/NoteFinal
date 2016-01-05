@@ -19,7 +19,7 @@ import note.com.notefinal.utils.dao.enums.View;
 /**
  * Created by Иван on 01.11.2015.
  */
-public class NoteDaoImpl implements Dao<Note> {
+public class NoteDaoImpl implements NoteDao<Note> {
     public static final String TABLE_NAME = "FINAL_NOTE";
     private SQLiteDatabase db;
 
@@ -64,7 +64,7 @@ public class NoteDaoImpl implements Dao<Note> {
     }
 
     @Override
-    public List<Note> getItems(View view) {
+    public List<Note> getItems() {
         List<Note> items = new ArrayList<>();
 
         db.beginTransaction();
@@ -146,5 +146,44 @@ public class NoteDaoImpl implements Dao<Note> {
         cv.put("DESCRIPTION", item.getDescription());
         cv.put("CREATE_TS", DateUtil.toString(item.getCreateTs()));
         return cv;
+    }
+
+    @Override
+    public List<Note> getItems(String param) {
+        List<Note> items = new ArrayList<>();
+
+        db.beginTransaction();
+        try {
+            Cursor cursor = db.query(TABLE_NAME, new String[]{"ID", "TITLE", "DESCRIPTION",
+                    "CREATE_TS"}, "TITLE LIKE ? OR DESCRIPTION LIKE ?",
+                    new String[] {"%" + param + "%", "%" + param + "%"}, null, null, null);
+
+            if (cursor.moveToFirst()) {
+                while (!cursor.isAfterLast()) {
+                    String id = cursor.getString(cursor.getColumnIndex("ID"));
+                    String title = cursor.getString(cursor.getColumnIndex("TITLE"));
+                    String description = cursor.getString(cursor.getColumnIndex("DESCRIPTION"));
+                    Date createTs = DateUtil.toDate(cursor.getString(cursor.getColumnIndex("CREATE_TS")));
+
+                    Note note = new Note();
+                    note.setId(UUID.fromString(id));
+                    note.setTitle(title);
+                    note.setDescription(description);
+                    note.setCreateTs(createTs);
+
+                    items.add(note);
+
+                    cursor.moveToNext();
+                }
+            }
+
+            cursor.close();
+
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+
+        return items;
     }
 }
