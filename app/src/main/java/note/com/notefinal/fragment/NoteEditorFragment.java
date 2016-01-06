@@ -188,11 +188,9 @@ public class NoteEditorFragment extends Fragment {
         });
 
         Point size = getSize();
-        int width = size.x;
         int height = size.y;
 
         RelativeLayout content = (RelativeLayout) dialog.findViewById(R.id.content);
-//        content.getLayoutParams().width = (width - (width / 7));
         content.getLayoutParams().height = (height / 6);
 
         WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
