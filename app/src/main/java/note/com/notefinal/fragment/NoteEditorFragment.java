@@ -1,18 +1,23 @@
 package note.com.notefinal.fragment;
 
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.app.Dialog;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.Date;
 import java.util.UUID;
@@ -156,39 +161,56 @@ public class NoteEditorFragment extends Fragment {
     }
 
     private void createDialog(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(message).setCancelable(false);
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.note_editor_cancel_dialog);
+        dialog.setTitle(R.string.info);
 
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        dialog.getWindow().setGravity(Gravity.CENTER);
+
+        TextView text = (TextView) dialog.findViewById(R.id.text);
+        text.setText(message);
+
+        Button yesBtn = (Button) dialog.findViewById(R.id.yes);
+        yesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(View v) {
                 dialog.cancel();
             }
         });
 
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        Button noBtn = (Button) dialog.findViewById(R.id.no);
+        noBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(View v) {
+                dialog.cancel();
                 mainActivity.initListFragment(null);
             }
         });
 
-        AlertDialog alert = builder.create();
-        alert.show();
+        Point size = getSize();
+        int width = size.x;
+        int height = size.y;
 
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        lp.copyFrom(alert.getWindow().getAttributes());
-        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
-        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        RelativeLayout content = (RelativeLayout) dialog.findViewById(R.id.content);
+//        content.getLayoutParams().width = (width - (width / 7));
+        content.getLayoutParams().height = (height / 6);
 
-        alert.getWindow().setAttributes(lp);
-    }
+        WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+        layoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL;
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setAttributes(layoutParams);
 
-    private int getCurrentOrientation() {
-        return getResources().getConfiguration().orientation;
+        dialog.show();
     }
 
     public void setMainActivity(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
+    }
+
+    private Point getSize() {
+        Display display = mainActivity.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        return size;
     }
 }

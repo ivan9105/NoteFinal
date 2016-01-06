@@ -13,4 +13,7 @@
     <string name="selectAll">Select all</string>
     <string name="search_hint">Search</string>
     <string name="menu_search">Search</string>
+    <string name="info">Information</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
