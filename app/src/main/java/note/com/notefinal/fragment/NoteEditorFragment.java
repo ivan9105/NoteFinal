@@ -124,11 +124,13 @@ public class NoteEditorFragment extends Fragment {
     }
 
     private Note assembleItem() {
-        Note item;
+        Note item = null;
 
         if (!isNew) {
             item = getArguments().getParcelable("item");
-        } else {
+        }
+
+        if (item == null) {
             item = new Note();
             item.setId(UUID.randomUUID());
         }
@@ -147,13 +149,14 @@ public class NoteEditorFragment extends Fragment {
         StringBuilder sb = new StringBuilder();
 
         if (titleField.getText() == null || titleField.getText().length() == 0) {
-            sb.append(" Title");
+            sb.append(mainActivity.getString(R.string.title));
             res = false;
         }
 
         if (!res) {
             String message = sb.toString();
-            message = String.format("%s %s", message, "can't be empty, continue edit?");
+            message = String.format("%s %s", message,
+                    mainActivity.getString(R.string.note_editor_cancel_dialog));
             createDialog(message);
         }
 
@@ -163,7 +166,7 @@ public class NoteEditorFragment extends Fragment {
     private void createDialog(String message) {
         final Dialog dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.note_editor_cancel_dialog);
-        dialog.setTitle(R.string.info);
+        dialog.setTitle(mainActivity.getString(R.string.info));
 
         dialog.getWindow().setGravity(Gravity.CENTER);
 
@@ -191,7 +194,7 @@ public class NoteEditorFragment extends Fragment {
         int height = size.y;
 
         RelativeLayout content = (RelativeLayout) dialog.findViewById(R.id.content);
-        content.getLayoutParams().height = (height / 6);
+        content.getLayoutParams().height = (height / 5);
 
         WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
         layoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL;

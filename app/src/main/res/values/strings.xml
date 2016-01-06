@@ -16,4 +16,5 @@
     <string name="info">Information</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="note_editor_cancel_dialog">can not be empty, continue edit?</string>
 </resources>

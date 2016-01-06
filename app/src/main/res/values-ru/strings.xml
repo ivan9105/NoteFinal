@@ -1,0 +1,20 @@
+<resources>
+    <string name="appName">Free note</string>
+    <string name="action_settings">Настройки</string>
+    <string name="title">Название</string>
+    <string name="description">Описание</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Отмена</string>
+    <string name="addNote">Добавить заметку</string>
+    <string name="add">Добавить</string>
+    <string name="name">Имя</string>
+    <string name="settings">Настройки</string>
+    <string name="remove">Удалить</string>
+    <string name="selectAll">Выбрать все</string>
+    <string name="search_hint">Поиск</string>
+    <string name="menu_search">Поиск</string>
+    <string name="info">Информация</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="note_editor_cancel_dialog">не может быть пустым, продолжить редактирование?</string>
+</resources>
