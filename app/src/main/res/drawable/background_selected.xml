@@ -10,7 +10,7 @@
                 android:color="@color/border_color"
                 />
 
-            <solid android:color="#D5F3F9" />
+            <solid android:color="@color/background_selected" />
         </shape>
     </item>
 

@@ -12,10 +12,11 @@
     </style>
 
     <color name="black">#000000</color>
+    <color name="light_blue">#D5F3F9</color>
     <color name="gray">#ff373737</color>
     <color name="white">#FFFFFF</color>
     <color name="actionBar_background">#ff96e6f3</color>
     <color name="background">#ffeeeeee</color>
-    <color name="background_selected">#D5F3F9</color>
+    <color name="background_selected">#f4e1e1</color>
     <color name="border_color">#ffff9797</color>
 </resources>
