@@ -17,4 +17,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="note_editor_cancel_dialog">can not be empty, continue edit?</string>
+    <string name="common">Common</string>
+    <string name="enableSearch">Enable search</string>
+    <string name="enableSearchDesc">This setting enables / disables the search for notes</string>
 </resources>

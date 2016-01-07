@@ -17,4 +17,7 @@
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="note_editor_cancel_dialog">не может быть пустым, продолжить редактирование?</string>
+    <string name="common">Общее</string>
+    <string name="enableSearch">Включить поиск</string>
+    <string name="enableSearchDesc">Эта настройка включает/выключает поиск по заметкам</string>
 </resources>

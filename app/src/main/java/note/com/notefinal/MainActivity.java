@@ -2,9 +2,11 @@ package note.com.notefinal;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
@@ -12,12 +14,12 @@ import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
-import android.widget.Toast;
 
 import java.lang.reflect.Field;
 
 import note.com.notefinal.fragment.NoteEditorFragment;
 import note.com.notefinal.fragment.NoteListFragment;
+import note.com.notefinal.fragment.NotePreferenceFragment;
 import note.com.notefinal.fragment.NoteRemoveListFragment;
 import note.com.notefinal.utils.AppConfig;
 import note.com.notefinal.utils.DBUtils;
@@ -27,9 +29,8 @@ import note.com.notefinal.utils.LogUtils;
 public class MainActivity extends ActionBarActivity {
     private NoteListFragment listFragment;
     private NoteEditorFragment noteEditorFragment;
-    private NoteRemoveListFragment noteRemoveListFragment;
+    private NotePreferenceFragment preferenceFragment;
     private String currentFragment;
-    private int position;
     private Menu menu;
     private boolean searchIsEmpty = true;
     private SearchView searchView = null;
@@ -59,6 +60,11 @@ public class MainActivity extends ActionBarActivity {
     public void initListFragment(Bundle savedInstanceState) {
         LogUtils.log(MainActivity.class, "init list fragment");
         listFragment = new NoteListFragment();
+
+        if (currentFragment != null && NotePreferenceFragment.NAME.equals(currentFragment)) {
+            getFragmentManager().beginTransaction().remove(preferenceFragment).commit();
+        }
+
         currentFragment = NoteListFragment.NAME;
 
         listFragment.setArguments(savedInstanceState);
@@ -67,10 +73,17 @@ public class MainActivity extends ActionBarActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.content, listFragment,
                 NoteListFragment.NAME).commit();
 
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
         if (menu != null) {
             menu.findItem(R.id.addItem).setVisible(true);
             menu.findItem(R.id.removeItems).setVisible(true);
             menu.findItem(R.id.menu_search).setVisible(true);
+            menu.findItem(R.id.settings).setVisible(true);
+
+            if (!preferences.getBoolean("searchEnable", true)) {
+                menu.findItem(R.id.menu_search).setVisible(false);
+            }
         }
     }
 
@@ -88,11 +101,12 @@ public class MainActivity extends ActionBarActivity {
         menu.findItem(R.id.addItem).setVisible(false);
         menu.findItem(R.id.removeItems).setVisible(false);
         menu.findItem(R.id.menu_search).setVisible(false);
+        menu.findItem(R.id.settings).setVisible(false);
     }
 
     public void initRemovedNoteList(Bundle savedInstanceState) {
         LogUtils.log(MainActivity.class, "init note removed items fragment");
-        noteRemoveListFragment = new NoteRemoveListFragment();
+        NoteRemoveListFragment noteRemoveListFragment = new NoteRemoveListFragment();
         currentFragment = NoteRemoveListFragment.NAME;
 
         noteRemoveListFragment.setArguments(savedInstanceState);
@@ -104,6 +118,23 @@ public class MainActivity extends ActionBarActivity {
         menu.findItem(R.id.addItem).setVisible(false);
         menu.findItem(R.id.removeItems).setVisible(false);
         menu.findItem(R.id.menu_search).setVisible(false);
+        menu.findItem(R.id.settings).setVisible(false);
+    }
+
+    private void initPreferences() {
+        preferenceFragment = new NotePreferenceFragment();
+        currentFragment = NotePreferenceFragment.NAME;
+        preferenceFragment.setMainActivity(this);
+
+        getSupportFragmentManager().beginTransaction().remove(listFragment).commit();
+
+        getFragmentManager().beginTransaction().replace(R.id.content, preferenceFragment,
+                NotePreferenceFragment.NAME).commit();
+
+        menu.findItem(R.id.addItem).setVisible(false);
+        menu.findItem(R.id.removeItems).setVisible(false);
+        menu.findItem(R.id.menu_search).setVisible(false);
+        menu.findItem(R.id.settings).setVisible(false);
     }
 
     private void updateDbIfNeeded() {
@@ -117,8 +148,10 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed() {
-        if (currentFragment.equals(NoteEditorFragment.NAME)){
+        if (currentFragment.equals(NoteEditorFragment.NAME)) {
             noteEditorFragment.commit();
+        } else if (currentFragment.equals(NotePreferenceFragment.NAME)) {
+            preferenceFragment.close();
         }
     }
 
@@ -176,17 +209,16 @@ public class MainActivity extends ActionBarActivity {
         switch (item.getItemId()) {
             case R.id.addItem:
                 initNoteEditor(null);
-                menu.findItem(R.id.addItem).setVisible(false);
-                menu.findItem(R.id.removeItems).setVisible(false);
-                menu.findItem(R.id.menu_search).setVisible(false);
                 searchView.onActionViewCollapsed();
                 break;
             case R.id.removeItems:
                 initRemovedNoteList(null);
-                menu.findItem(R.id.addItem).setVisible(false);
-                menu.findItem(R.id.removeItems).setVisible(false);
-                menu.findItem(R.id.menu_search).setVisible(false);
                 searchView.onActionViewCollapsed();
+                break;
+            case R.id.settings:
+                initPreferences();
+                searchView.onActionViewCollapsed();
+                menu.findItem(R.id.settings).setVisible(false);
                 break;
             default:
                 break;
