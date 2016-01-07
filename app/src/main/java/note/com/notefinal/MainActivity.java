@@ -53,7 +53,7 @@ public class MainActivity extends ActionBarActivity {
         ActionBar supportActionBar = getSupportActionBar();
         supportActionBar.setTitle("");
         supportActionBar.setDisplayShowHomeEnabled(true);
-        supportActionBar.setLogo(R.drawable.icon);
+        supportActionBar.setLogo(R.mipmap.icon);
         supportActionBar.setDisplayUseLogoEnabled(true);
     }
 
