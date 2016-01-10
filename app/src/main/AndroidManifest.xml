@@ -21,6 +21,24 @@
                 android:name="android.app.default_searchable"
                 android:resource="@xml/searchable"/>
         </activity>
+        <receiver
+            android:name=".widget.NoteWidget"
+            android:icon="@drawable/icon"
+            android:label="@string/widgetName">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_metadata" />
+        </receiver>
+        <activity
+            android:name=".widget.ConfigActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
