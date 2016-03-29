@@ -51,21 +51,17 @@ public class NoteRemoveListAdapter extends ArrayAdapter<Note> {
         String formattedDate = getFormattedDate(note.getCreateTs());
         String[] dateArr = formattedDate.split(" ");
 
-        TextView space = (TextView) view.findViewById(R.id.space);
         ((TextView) view.findViewById(R.id.titleField)).setText(title);
         ((TextView) view.findViewById(R.id.dateField)).setText(dateArr[0]);
 
         if (selected.contains(note)) {
             Drawable background = ctx.getResources().getDrawable(R.drawable.background_selected);
-            Drawable backgroundSpace = ctx.getResources().getDrawable(R.drawable.background_space_selected);
 
             int sdk = android.os.Build.VERSION.SDK_INT;
             if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
                 view.setBackgroundDrawable(background);
-                space.setBackgroundDrawable(backgroundSpace);
             } else {
                 view.setBackground(background);
-                space.setBackground(backgroundSpace);
             }
         }
 
