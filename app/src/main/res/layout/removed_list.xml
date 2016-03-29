@@ -21,7 +21,8 @@
         <Button
             android:id="@+id/ok"
             android:layout_width="0dp"
-            android:textColor="#000000"
+            android:textColor="#F2000000"
+            android:textSize="16sp"
             android:background="@drawable/button_selector"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
@@ -31,7 +32,8 @@
         <Button
             android:id="@+id/selectAll"
             android:layout_width="0dp"
-            android:textColor="#000000"
+            android:textColor="#F2000000"
+            android:textSize="16sp"
             android:background="@drawable/button_selector"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
