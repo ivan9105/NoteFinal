@@ -51,7 +51,8 @@ public class NoteListAdapter extends ArrayAdapter<Note> {
     }
 
     private String getFormattedDate(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy hh:mm", Locale.ENGLISH);
+        Locale currentLocale = Locale.getDefault();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM. yyyy hh:mm", currentLocale);
         return sdf.format(date);
     }
 }
