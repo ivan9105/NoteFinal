@@ -1,7 +1,6 @@
 package note.com.notefinal.adapters;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +51,7 @@ public class NoteListAdapter extends ArrayAdapter<Note> {
 
     private String getFormattedDate(Date date) {
         Locale currentLocale = Locale.getDefault();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM. yyyy hh:mm", currentLocale);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM. yyyy HH:mm", currentLocale);
         return sdf.format(date);
     }
 }

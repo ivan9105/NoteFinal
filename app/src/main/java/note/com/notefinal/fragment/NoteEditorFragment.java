@@ -19,12 +19,12 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.Date;
 import java.util.UUID;
 
 import note.com.notefinal.MainActivity;
 import note.com.notefinal.R;
 import note.com.notefinal.entity.Note;
+import note.com.notefinal.utils.DateUtil;
 import note.com.notefinal.utils.dao.note.NoteDaoImpl;
 
 /**
@@ -138,7 +138,7 @@ public class NoteEditorFragment extends Fragment {
         item.setTitle(titleField.getText().toString());
         item.setDescription(descField.getText().toString());
         if (item.getCreateTs() == null) {
-            item.setCreateTs(new Date());
+            item.setCreateTs(DateUtil.getCurrentDate());
         }
 
         return item;
