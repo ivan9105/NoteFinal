@@ -1,32 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainLayout"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:minHeight="75dp"
     android:orientation="horizontal">
+
+    <RelativeLayout
+        android:id="@+id/square_layout"
+        android:layout_width="75dp"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/square_view"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_centerInParent="true"
+            />
+    </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="2.2">
+        android:layout_weight="2.2"
+        android:paddingLeft="5dp">
 
         <TextView
             android:id="@+id/titleField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:layout_above="@+id/dateField"
-            android:textColor="#000000"
+            android:layout_alignParentTop="true"
             android:layout_margin="4dp"
+            android:textColor="#000000"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/dateField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="bottom"
             android:layout_alignParentBottom="true"
-            android:textColor="#ff6f6d70"
             android:layout_margin="4dp"
-            android:textSize="16sp" />
+            android:gravity="bottom"
+            android:textColor="#ff6f6d70"
+            android:textSize="14sp" />
     </RelativeLayout>
 </LinearLayout>

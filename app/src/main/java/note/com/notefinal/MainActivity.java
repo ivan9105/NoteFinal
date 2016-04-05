@@ -3,8 +3,12 @@ package note.com.notefinal;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
@@ -55,6 +59,17 @@ public class MainActivity extends ActionBarActivity {
         supportActionBar.setDisplayShowHomeEnabled(true);
         supportActionBar.setLogo(R.mipmap.icon);
         supportActionBar.setDisplayUseLogoEnabled(true);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            int[] attrs = {R.attr.colorPrimary};
+            TypedArray ta = obtainStyledAttributes(R.style.AppTheme, attrs);
+            String text = ta.getString(0);
+            if (text != null) {
+                ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(text));
+                colorDrawable.setAlpha(190);
+                supportActionBar.setBackgroundDrawable(colorDrawable);
+            }
+            ta.recycle();
+        }
     }
 
     public void initListFragment(Bundle savedInstanceState) {

@@ -1,10 +1,17 @@
 package note.com.notefinal.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.util.DisplayMetrics;
+import android.util.Pair;
+import android.util.TypedValue;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -19,7 +26,7 @@ import note.com.notefinal.entity.Note;
  * Created by Иван on 31.10.2015.
  */
 public class NoteListAdapter extends ArrayAdapter<Note> {
-    public static final int MAX_TITLE_LENGTH = 70;
+    public int MAX_TITLE_LENGTH = 60;
     private Context ctx;
     private List<Note> data;
 
@@ -35,6 +42,15 @@ public class NoteListAdapter extends ArrayAdapter<Note> {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.note_portrait, parent, false);
 
+        LinearLayout mainLayout = (LinearLayout) view.findViewById(R.id.mainLayout);
+        Pair<Integer, Integer> screenResolution = getScreenResolution();
+        if (screenResolution.second > 1000) {
+            MAX_TITLE_LENGTH = 73;
+            int minHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 95,
+                    getContext().getResources().getDisplayMetrics());
+            mainLayout.setMinimumHeight(minHeight);
+        }
+
         Note note = data.get(position);
 
         String title = note.getTitle();
@@ -46,12 +62,36 @@ public class NoteListAdapter extends ArrayAdapter<Note> {
         ((TextView) view.findViewById(R.id.titleField)).setText(title);
         ((TextView) view.findViewById(R.id.dateField)).setText(formattedDate);
 
+        initSquareLayout(view);
+
         return view;
+    }
+
+    private void initSquareLayout(View view) {
+        TextView squareView = (TextView) view.findViewById(R.id.square_view);
+        Drawable background = ctx.getResources().getDrawable(R.drawable.priority_shape_green);
+
+        int sdk = android.os.Build.VERSION.SDK_INT;
+        if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            squareView.setBackgroundDrawable(background);
+        } else {
+            squareView.setBackground(background);
+        }
     }
 
     private String getFormattedDate(Date date) {
         Locale currentLocale = Locale.getDefault();
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM. yyyy HH:mm", currentLocale);
         return sdf.format(date);
+    }
+
+    private Pair<Integer, Integer> getScreenResolution() {
+        WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        DisplayMetrics metrics = new DisplayMetrics();
+        display.getMetrics(metrics);
+        int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
+        return new Pair<>(width, height);
     }
 }

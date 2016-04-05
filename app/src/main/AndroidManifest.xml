@@ -3,6 +3,7 @@
     package="note.com.notefinal" >
 
     <application
+        android:debuggable="true"
         android:allowBackup="true"
         android:icon="@mipmap/icon"
         android:label="@string/appName"
