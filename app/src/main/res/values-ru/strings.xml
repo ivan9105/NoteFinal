@@ -2,6 +2,11 @@
     <string name="appName">Free note</string>
     <string name="action_settings">Настройки</string>
     <string name="title">Название</string>
+    <string name="priority">Приоритет</string>
+    <string name="minor">Незначительный</string>
+    <string name="normal">Нормальный</string>
+    <string name="major">Важный</string>
+    <string name="critical">Критический</string>
     <string name="description">Описание</string>
     <string name="ok">OK</string>
     <string name="cancel">Отмена</string>

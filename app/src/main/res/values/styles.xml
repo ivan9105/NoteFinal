@@ -15,7 +15,7 @@
     <color name="light_blue">#D5F3F9</color>
     <color name="gray">#ff373737</color>
     <color name="white">#FFFFFF</color>
-    <color name="actionBar_background">##37d349</color>
+    <color name="actionBar_background">#37d349</color>
     <color name="background">#ffeeeeee</color>
     <color name="background_selected">#40bae4e7</color>
     <color name="border_color">#1A262c44</color>

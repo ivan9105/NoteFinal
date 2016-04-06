@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Pair;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -17,13 +18,18 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import note.com.notefinal.MainActivity;
 import note.com.notefinal.R;
+import note.com.notefinal.adapters.NotePriorityAdapter;
 import note.com.notefinal.entity.Note;
+import note.com.notefinal.entity.enums.NotePriority;
 import note.com.notefinal.utils.DateUtil;
 import note.com.notefinal.utils.dao.note.NoteDaoImpl;
 
@@ -35,6 +41,7 @@ public class NoteEditorFragment extends Fragment {
 
     private EditText titleField, descField;
     private Note item;
+    private Spinner priorityField;
 
     private MainActivity mainActivity;
 
@@ -47,15 +54,30 @@ public class NoteEditorFragment extends Fragment {
 
         noteDao = new NoteDaoImpl();
 
-        initFields(view);
+        initFields(view, inflater, container);
         setItem();
+        postInit();
 
         return view;
     }
 
-    private void initFields(View view) {
+    private void postInit() {
+        if (item != null && item.getPriority() != null) {
+            NotePriorityAdapter adapter = (NotePriorityAdapter) priorityField.getAdapter();
+            List<Pair<String, NotePriority>> data = adapter.getData();
+            for (Pair<String, NotePriority> pair : data) {
+                if (pair.second == item.getPriority()) {
+                    priorityField.setSelection(data.indexOf(pair));
+                    break;
+                }
+            }
+        }
+    }
+
+    private void initFields(View view, LayoutInflater inflater, ViewGroup container) {
         titleField = (EditText) view.findViewById(R.id.titleField);
         descField = (EditText) view.findViewById(R.id.descField);
+        priorityField = (Spinner) view.findViewById(R.id.priorityField);
 
         descField.addTextChangedListener(new TextWatcher() {
             private boolean change = true;
@@ -98,6 +120,20 @@ public class NoteEditorFragment extends Fragment {
                 }
             }
         });
+
+        List<Pair<String, NotePriority>> data = new ArrayList<>();
+        for (NotePriority priority : NotePriority.values()) {
+            if (priority == NotePriority.NORMAL) {
+                data.add(new Pair<>(mainActivity.getString(R.string.normal), priority));
+            } else if (priority == NotePriority.MINOR) {
+                data.add(new Pair<>(mainActivity.getString(R.string.minor), priority));
+            } else if (priority == NotePriority.MAJOR) {
+                data.add(new Pair<>(mainActivity.getString(R.string.major), priority));
+            } else if (priority == NotePriority.CRITICAL) {
+                data.add(new Pair<>(mainActivity.getString(R.string.critical), priority));
+            }
+        }
+        priorityField.setAdapter(new NotePriorityAdapter(mainActivity, R.layout.priority, data));
     }
 
     private void setItem() {
@@ -140,6 +176,12 @@ public class NoteEditorFragment extends Fragment {
         if (item.getCreateTs() == null) {
             item.setCreateTs(DateUtil.getCurrentDate());
         }
+
+        int position = priorityField.getSelectedItemPosition();
+        NotePriorityAdapter adapter = (NotePriorityAdapter) priorityField.getAdapter();
+        List<Pair<String, NotePriority>> data = adapter.getData();
+        Pair<String, NotePriority> pair = data.get(position);
+        item.setPriority(pair.second);
 
         return item;
     }

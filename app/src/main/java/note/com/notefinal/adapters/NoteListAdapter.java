@@ -21,6 +21,7 @@ import java.util.Locale;
 
 import note.com.notefinal.R;
 import note.com.notefinal.entity.Note;
+import note.com.notefinal.entity.enums.NotePriority;
 
 /**
  * Created by Иван on 31.10.2015.
@@ -62,14 +63,27 @@ public class NoteListAdapter extends ArrayAdapter<Note> {
         ((TextView) view.findViewById(R.id.titleField)).setText(title);
         ((TextView) view.findViewById(R.id.dateField)).setText(formattedDate);
 
-        initSquareLayout(view);
+        initSquareLayout(view, note);
 
         return view;
     }
 
-    private void initSquareLayout(View view) {
+    private void initSquareLayout(View view, Note note) {
         TextView squareView = (TextView) view.findViewById(R.id.square_view);
-        Drawable background = ctx.getResources().getDrawable(R.drawable.priority_shape_green);
+        Drawable background = null;
+        if (note.getPriority() == NotePriority.NORMAL) {
+            background = getContext().getResources().getDrawable(R.drawable.priority_shape_green);
+        } else if (note.getPriority() == NotePriority.MINOR) {
+            background = getContext().getResources().getDrawable(R.drawable.priority_shape_lite_green);
+        } else if (note.getPriority() == NotePriority.MAJOR) {
+            background = getContext().getResources().getDrawable(R.drawable.priority_shape_orange);
+        } else if (note.getPriority() == NotePriority.CRITICAL) {
+            background = getContext().getResources().getDrawable(R.drawable.priority_shape_red);
+        }
+
+        if (background == null) {
+            background = getContext().getResources().getDrawable(R.drawable.priority_shape_green);
+        }
 
         int sdk = android.os.Build.VERSION.SDK_INT;
         if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {

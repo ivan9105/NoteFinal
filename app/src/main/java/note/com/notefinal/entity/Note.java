@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import java.util.Date;
 import java.util.UUID;
 
+import note.com.notefinal.entity.enums.NotePriority;
+
 /**
  * Created by Иван on 26.10.2015.
  */
@@ -14,6 +16,7 @@ public class Note implements Parcelable {
     private String title;
     private String description;
     private Date createTs;
+    private String priority;
 
     public Note() {
     }
@@ -25,6 +28,7 @@ public class Note implements Parcelable {
         this.id = UUID.fromString(data[0]);
         this.title = data[1];
         this.description = data[2];
+        this.priority = data[3];
         this.createTs = new Date(source.readLong());
     }
 
@@ -60,6 +64,14 @@ public class Note implements Parcelable {
         this.createTs = createTs;
     }
 
+    public NotePriority getPriority() {
+        return NotePriority.getById(priority);
+    }
+
+    public void setPriority(NotePriority priority) {
+        this.priority = priority.getId();
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -70,7 +82,8 @@ public class Note implements Parcelable {
         dest.writeStringArray(new String[]{
                 String.valueOf(id),
                 title,
-                description
+                description,
+                priority
         });
         dest.writeLong(createTs.getTime());
     }

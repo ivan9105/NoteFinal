@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 import note.com.notefinal.entity.Note;
+import note.com.notefinal.entity.enums.NotePriority;
 import note.com.notefinal.utils.DBUtils;
 import note.com.notefinal.utils.DateUtil;
 import note.com.notefinal.utils.dao.Dao;
@@ -70,7 +71,7 @@ public class NoteDaoImpl implements NoteDao<Note> {
         db.beginTransaction();
         try {
             Cursor cursor = db.query(TABLE_NAME, new String[]{"ID", "TITLE", "DESCRIPTION",
-                    "CREATE_TS"}, null, null, null, null, null);
+                    "CREATE_TS", "PRIORITY"}, null, null, null, null, null);
 
             if (cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
@@ -78,12 +79,14 @@ public class NoteDaoImpl implements NoteDao<Note> {
                     String title = cursor.getString(cursor.getColumnIndex("TITLE"));
                     String description = cursor.getString(cursor.getColumnIndex("DESCRIPTION"));
                     Date createTs = DateUtil.toDate(cursor.getString(cursor.getColumnIndex("CREATE_TS")));
+                    String priority = cursor.getString(cursor.getColumnIndex("PRIORITY"));
 
                     Note note = new Note();
                     note.setId(UUID.fromString(id));
                     note.setTitle(title);
                     note.setDescription(description);
                     note.setCreateTs(createTs);
+                    note.setPriority(NotePriority.getById(priority));
 
                     items.add(note);
 
@@ -109,19 +112,21 @@ public class NoteDaoImpl implements NoteDao<Note> {
         db.beginTransaction();
         try {
             Cursor cursor = db.query(TABLE_NAME, new String[]{"ID", "TITLE", "DESCRIPTION",
-                    "CREATE_TS"}, "ID = ?", new String[] {id.toString()}, null, null, null);
+                    "CREATE_TS", "PRIORITY"}, "ID = ?", new String[] {id.toString()}, null, null, null);
 
             if (cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
                     String title = cursor.getString(cursor.getColumnIndex("TITLE"));
                     String description = cursor.getString(cursor.getColumnIndex("DESCRIPTION"));
                     Date createTs = DateUtil.toDate(cursor.getString(cursor.getColumnIndex("CREATE_TS")));
+                    String priority = cursor.getString(cursor.getColumnIndex("PRIORITY"));
 
                     Note note = new Note();
                     note.setId(id);
                     note.setTitle(title);
                     note.setDescription(description);
                     note.setCreateTs(createTs);
+                    note.setPriority(NotePriority.getById(priority));
 
                     item = note;
 
@@ -145,6 +150,7 @@ public class NoteDaoImpl implements NoteDao<Note> {
         cv.put("TITLE", item.getTitle());
         cv.put("DESCRIPTION", item.getDescription());
         cv.put("CREATE_TS", DateUtil.toString(item.getCreateTs()));
+        cv.put("PRIORITY", item.getPriority().getId());
         return cv;
     }
 
@@ -155,7 +161,7 @@ public class NoteDaoImpl implements NoteDao<Note> {
         db.beginTransaction();
         try {
             Cursor cursor = db.query(TABLE_NAME, new String[]{"ID", "TITLE", "DESCRIPTION",
-                    "CREATE_TS"}, "TITLE LIKE ? OR DESCRIPTION LIKE ?",
+                    "CREATE_TS", "PRIORITY"}, "TITLE LIKE ? OR DESCRIPTION LIKE ?",
                     new String[] {"%" + param + "%", "%" + param + "%"}, null, null, null);
 
             if (cursor.moveToFirst()) {
@@ -164,12 +170,14 @@ public class NoteDaoImpl implements NoteDao<Note> {
                     String title = cursor.getString(cursor.getColumnIndex("TITLE"));
                     String description = cursor.getString(cursor.getColumnIndex("DESCRIPTION"));
                     Date createTs = DateUtil.toDate(cursor.getString(cursor.getColumnIndex("CREATE_TS")));
+                    String priority = cursor.getString(cursor.getColumnIndex("PRIORITY"));
 
                     Note note = new Note();
                     note.setId(UUID.fromString(id));
                     note.setTitle(title);
                     note.setDescription(description);
                     note.setCreateTs(createTs);
+                    note.setPriority(NotePriority.getById(priority));
 
                     items.add(note);
 
