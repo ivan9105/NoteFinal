@@ -36,8 +36,6 @@ public class MainActivity extends ActionBarActivity {
     private NotePreferenceFragment preferenceFragment;
     private String currentFragment;
     private Menu menu;
-    private boolean searchIsEmpty = true;
-    private SearchView searchView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,46 +174,6 @@ public class MainActivity extends ActionBarActivity {
         getMenuInflater().inflate(R.menu.actions_menu, menu);
         this.menu = menu;
 
-        final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                if (listFragment != null) {
-                    listFragment.filterItems(searchView.getQuery().toString());
-                }
-                searchIsEmpty = false;
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                if (s.equals("")) {
-                    searchIsEmpty = true;
-                    if (listFragment != null) {
-                        listFragment.filterItems(null);
-                    }
-                }
-                return false;
-            }
-        });
-
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                if (!searchIsEmpty) {
-                    if (listFragment != null) {
-                        listFragment.filterItems(null);
-                    }
-                }
-                return false;
-            }
-        });
-
-        searchView.setMaxWidth(getWidth() / 2);
-
         return true;
     }
 
@@ -224,15 +182,12 @@ public class MainActivity extends ActionBarActivity {
         switch (item.getItemId()) {
             case R.id.addItem:
                 initNoteEditor(null);
-                searchView.onActionViewCollapsed();
                 break;
             case R.id.removeItems:
                 initRemovedNoteList(null);
-                searchView.onActionViewCollapsed();
                 break;
             case R.id.settings:
                 initPreferences();
-                searchView.onActionViewCollapsed();
                 menu.findItem(R.id.settings).setVisible(false);
                 break;
             default:
@@ -262,12 +217,5 @@ public class MainActivity extends ActionBarActivity {
         } catch (Exception e) {
             LogUtils.log(this.getClass(), e.getLocalizedMessage());
         }
-    }
-
-    private int getWidth() {
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        return size.x;
     }
 }

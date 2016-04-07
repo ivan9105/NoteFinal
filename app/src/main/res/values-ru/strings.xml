@@ -25,4 +25,5 @@
     <string name="common">Общее</string>
     <string name="enableSearch">Включить поиск</string>
     <string name="enableSearchDesc">Эта настройка включает/выключает поиск по заметкам</string>
+    <string name="all">Все</string>
 </resources>

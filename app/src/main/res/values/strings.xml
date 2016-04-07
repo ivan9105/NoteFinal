@@ -26,4 +26,5 @@
     <string name="enableSearch">Enable search</string>
     <string name="enableSearchDesc">This setting enables / disables the search for notes</string>
     <string name="widgetName">Free note widget</string>
+    <string name="all">All</string>
 </resources>

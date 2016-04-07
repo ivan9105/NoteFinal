@@ -3,7 +3,7 @@
     <item
         android:id="@+id/menu_search"
         android:title="@string/menu_search"
-        market_app:actionViewClass="android.support.v7.widget.SearchView"
+        android:icon="@mipmap/ic_search_white_24dp"
         market_app:showAsAction="always"/>
     <item
         android:id="@+id/addItem"

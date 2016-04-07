@@ -7,14 +7,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import note.com.notefinal.MainActivity;
 import note.com.notefinal.R;
 import note.com.notefinal.adapters.NoteListAdapter;
+import note.com.notefinal.adapters.NotePriorityAdapter;
 import note.com.notefinal.entity.Note;
+import note.com.notefinal.entity.enums.NotePriority;
 import note.com.notefinal.utils.dao.note.NoteDaoImpl;
 
 /**
@@ -25,6 +31,8 @@ public class NoteListFragment extends ListFragment {
 
     private NoteDaoImpl noteDao;
     private MainActivity mainActivity;
+    private Spinner priorityField;
+    private EditText filterField;
 
     public NoteListFragment() {
         noteDao = new NoteDaoImpl();
@@ -32,7 +40,15 @@ public class NoteListFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.list_portrait, container, false);
+        View view = inflater.inflate(R.layout.list_portrait, container, false);
+
+        priorityField = (Spinner) view.findViewById(R.id.priority_field);
+        filterField = (EditText) view.findViewById(R.id.filter_field);
+
+        List<NotePriority> data = new ArrayList<>(Arrays.asList(NotePriority.values()));
+        data.add(0, null);
+        priorityField.setAdapter(new NotePriorityAdapter(mainActivity, R.layout.priority_short, data));
+        return view;
     }
 
     @Override

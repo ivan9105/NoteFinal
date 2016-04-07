@@ -27,7 +27,7 @@ import java.util.UUID;
 
 import note.com.notefinal.MainActivity;
 import note.com.notefinal.R;
-import note.com.notefinal.adapters.NotePriorityAdapter;
+import note.com.notefinal.adapters.NoteEditorPriorityAdapter;
 import note.com.notefinal.entity.Note;
 import note.com.notefinal.entity.enums.NotePriority;
 import note.com.notefinal.utils.DateUtil;
@@ -63,7 +63,7 @@ public class NoteEditorFragment extends Fragment {
 
     private void postInit() {
         if (item != null && item.getPriority() != null) {
-            NotePriorityAdapter adapter = (NotePriorityAdapter) priorityField.getAdapter();
+            NoteEditorPriorityAdapter adapter = (NoteEditorPriorityAdapter) priorityField.getAdapter();
             List<Pair<String, NotePriority>> data = adapter.getData();
             for (Pair<String, NotePriority> pair : data) {
                 if (pair.second == item.getPriority()) {
@@ -133,7 +133,7 @@ public class NoteEditorFragment extends Fragment {
                 data.add(new Pair<>(mainActivity.getString(R.string.critical), priority));
             }
         }
-        priorityField.setAdapter(new NotePriorityAdapter(mainActivity, R.layout.priority, data));
+        priorityField.setAdapter(new NoteEditorPriorityAdapter(mainActivity, R.layout.priority, data));
     }
 
     private void setItem() {
@@ -178,7 +178,7 @@ public class NoteEditorFragment extends Fragment {
         }
 
         int position = priorityField.getSelectedItemPosition();
-        NotePriorityAdapter adapter = (NotePriorityAdapter) priorityField.getAdapter();
+        NoteEditorPriorityAdapter adapter = (NoteEditorPriorityAdapter) priorityField.getAdapter();
         List<Pair<String, NotePriority>> data = adapter.getData();
         Pair<String, NotePriority> pair = data.get(position);
         item.setPriority(pair.second);
