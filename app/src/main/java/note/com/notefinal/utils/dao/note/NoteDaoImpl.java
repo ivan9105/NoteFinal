@@ -155,14 +155,27 @@ public class NoteDaoImpl implements NoteDao<Note> {
     }
 
     @Override
-    public List<Note> getItems(String param) {
+    public List<Note> getItems(@Nullable String param, @Nullable NotePriority priority) {
         List<Note> items = new ArrayList<>();
 
         db.beginTransaction();
         try {
+            String where;
+            String[] params;
+            if (priority == null) {
+                where = "TITLE LIKE ? OR DESCRIPTION LIKE ?";
+                params = new String[]{"%" + param + "%", "%" + param + "%"};
+            } else if (param == null || param.equals("")) {
+                where = "PRIORITY = ?";
+                params = new String[]{priority.getId()};
+            } else {
+                where = "(TITLE LIKE ? OR DESCRIPTION LIKE ?) AND PRIORITY = ?";
+                params = new String[]{"%" + param + "%", "%" + param + "%", priority.getId()};
+            }
+
             Cursor cursor = db.query(TABLE_NAME, new String[]{"ID", "TITLE", "DESCRIPTION",
-                    "CREATE_TS", "PRIORITY"}, "TITLE LIKE ? OR DESCRIPTION LIKE ?",
-                    new String[] {"%" + param + "%", "%" + param + "%"}, null, null, null);
+                    "CREATE_TS", "PRIORITY"}, where,
+                    params, null, null, null);
 
             if (cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
@@ -170,14 +183,14 @@ public class NoteDaoImpl implements NoteDao<Note> {
                     String title = cursor.getString(cursor.getColumnIndex("TITLE"));
                     String description = cursor.getString(cursor.getColumnIndex("DESCRIPTION"));
                     Date createTs = DateUtil.toDate(cursor.getString(cursor.getColumnIndex("CREATE_TS")));
-                    String priority = cursor.getString(cursor.getColumnIndex("PRIORITY"));
+                    String priorityId = cursor.getString(cursor.getColumnIndex("PRIORITY"));
 
                     Note note = new Note();
                     note.setId(UUID.fromString(id));
                     note.setTitle(title);
                     note.setDescription(description);
                     note.setCreateTs(createTs);
-                    note.setPriority(NotePriority.getById(priority));
+                    note.setPriority(NotePriority.getById(priorityId));
 
                     items.add(note);
 

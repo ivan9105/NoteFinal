@@ -8,6 +8,7 @@
         android:layout_width="27dp"
         android:layout_height="27dp"
         android:layout_marginLeft="23dp"
+        android:layout_marginTop="4dp"
         android:textSize="16dp"
         android:textColor="@color/black"
         />

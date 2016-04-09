@@ -32,6 +32,7 @@ import note.com.notefinal.utils.LogUtils;
 
 public class MainActivity extends ActionBarActivity {
     private NoteListFragment listFragment;
+    private NoteRemoveListFragment noteRemoveListFragment;
     private NoteEditorFragment noteEditorFragment;
     private NotePreferenceFragment preferenceFragment;
     private String currentFragment;
@@ -57,6 +58,10 @@ public class MainActivity extends ActionBarActivity {
         supportActionBar.setDisplayShowHomeEnabled(true);
         supportActionBar.setLogo(R.mipmap.icon);
         supportActionBar.setDisplayUseLogoEnabled(true);
+        setToolBarColor(supportActionBar);
+    }
+
+    private void setToolBarColor(ActionBar supportActionBar) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             int[] attrs = {R.attr.colorPrimary};
             TypedArray ta = obtainStyledAttributes(R.style.AppTheme, attrs);
@@ -119,7 +124,7 @@ public class MainActivity extends ActionBarActivity {
 
     public void initRemovedNoteList(Bundle savedInstanceState) {
         LogUtils.log(MainActivity.class, "init note removed items fragment");
-        NoteRemoveListFragment noteRemoveListFragment = new NoteRemoveListFragment();
+        noteRemoveListFragment = new NoteRemoveListFragment();
         currentFragment = NoteRemoveListFragment.NAME;
 
         noteRemoveListFragment.setArguments(savedInstanceState);
@@ -130,7 +135,6 @@ public class MainActivity extends ActionBarActivity {
 
         menu.findItem(R.id.addItem).setVisible(false);
         menu.findItem(R.id.removeItems).setVisible(false);
-        menu.findItem(R.id.menu_search).setVisible(false);
         menu.findItem(R.id.settings).setVisible(false);
     }
 
@@ -190,6 +194,19 @@ public class MainActivity extends ActionBarActivity {
                 initPreferences();
                 menu.findItem(R.id.settings).setVisible(false);
                 break;
+            case R.id.menu_search:
+                if ((NoteListFragment.NAME.equals(currentFragment))) {
+                    if (!listFragment.isShowSearch()) {
+                        item.setVisible(false);
+                        listFragment.showSearch(true);
+                    }
+                } else if (NoteRemoveListFragment.NAME.equals(currentFragment)) {
+                    if (!noteRemoveListFragment.isShowSearch()) {
+                        item.setVisible(false);
+                        noteRemoveListFragment.showSearch(true);
+                    }
+                }
+                break;
             default:
                 break;
         }
@@ -217,5 +234,10 @@ public class MainActivity extends ActionBarActivity {
         } catch (Exception e) {
             LogUtils.log(this.getClass(), e.getLocalizedMessage());
         }
+    }
+
+    public void showSearch() {
+        MenuItem item = menu.findItem(R.id.menu_search);
+        item.setVisible(true);
     }
 }
