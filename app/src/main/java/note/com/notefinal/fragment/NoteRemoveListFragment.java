@@ -22,7 +22,6 @@ import java.util.List;
 
 import note.com.notefinal.MainActivity;
 import note.com.notefinal.R;
-import note.com.notefinal.adapters.NoteListAdapter;
 import note.com.notefinal.adapters.NotePriorityAdapter;
 import note.com.notefinal.adapters.NoteRemoveListAdapter;
 import note.com.notefinal.entity.Note;

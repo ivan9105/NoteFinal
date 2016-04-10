@@ -16,6 +16,10 @@
         android:icon="@mipmap/ic_delete_white_24dp"
         market_app:showAsAction="always"/>
     <item
+        android:id="@+id/calendar"
+        android:title="@string/calendar"
+        market_app:showAsAction="never"/>
+    <item
         android:id="@+id/settings"
         android:title="@string/settings"
         market_app:showAsAction="never" />

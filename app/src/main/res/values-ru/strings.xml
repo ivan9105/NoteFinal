@@ -14,6 +14,7 @@
     <string name="add">Добавить</string>
     <string name="name">Имя</string>
     <string name="settings">Настройки</string>
+    <string name="calendar">Google календарь</string>
     <string name="remove">Удалить</string>
     <string name="selectAll">Выбрать все</string>
     <string name="search_hint">Поиск</string>

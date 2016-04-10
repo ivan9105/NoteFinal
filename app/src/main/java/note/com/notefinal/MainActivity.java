@@ -21,6 +21,7 @@ import android.view.ViewConfiguration;
 
 import java.lang.reflect.Field;
 
+import note.com.notefinal.fragment.NoteCalendarFragment;
 import note.com.notefinal.fragment.NoteEditorFragment;
 import note.com.notefinal.fragment.NoteListFragment;
 import note.com.notefinal.fragment.NotePreferenceFragment;
@@ -35,6 +36,7 @@ public class MainActivity extends ActionBarActivity {
     private NoteRemoveListFragment noteRemoveListFragment;
     private NoteEditorFragment noteEditorFragment;
     private NotePreferenceFragment preferenceFragment;
+    private NoteCalendarFragment calendarFragment;
     private String currentFragment;
     private Menu menu;
 
@@ -98,6 +100,7 @@ public class MainActivity extends ActionBarActivity {
             menu.findItem(R.id.removeItems).setVisible(true);
             menu.findItem(R.id.menu_search).setVisible(true);
             menu.findItem(R.id.settings).setVisible(true);
+            menu.findItem(R.id.calendar).setVisible(true);
 
             if (!preferences.getBoolean("searchEnable", true)) {
                 menu.findItem(R.id.menu_search).setVisible(false);
@@ -154,6 +157,21 @@ public class MainActivity extends ActionBarActivity {
         menu.findItem(R.id.settings).setVisible(false);
     }
 
+    private void initCalendar() {
+        calendarFragment = new NoteCalendarFragment();
+        currentFragment = NoteCalendarFragment.NAME;
+        calendarFragment.setMainActivity(this);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, calendarFragment,
+                NoteEditorFragment.NAME).commit();
+
+        menu.findItem(R.id.addItem).setVisible(false);
+        menu.findItem(R.id.removeItems).setVisible(false);
+        menu.findItem(R.id.menu_search).setVisible(false);
+        menu.findItem(R.id.settings).setVisible(false);
+        menu.findItem(R.id.calendar).setVisible(false);
+    }
+
     private void updateDbIfNeeded() {
         LogUtils.log(MainActivity.class, "update db");
         int dbVersion = AppConfig.getDbVersion(getApplicationContext());
@@ -169,6 +187,8 @@ public class MainActivity extends ActionBarActivity {
             noteEditorFragment.commit();
         } else if (currentFragment.equals(NotePreferenceFragment.NAME)) {
             preferenceFragment.close();
+        } else if (currentFragment.equals(NoteCalendarFragment.NAME)) {
+            calendarFragment.commit();
         }
     }
 
@@ -206,6 +226,9 @@ public class MainActivity extends ActionBarActivity {
                         noteRemoveListFragment.showSearch(true);
                     }
                 }
+                break;
+            case R.id.calendar:
+                initCalendar();
                 break;
             default:
                 break;
