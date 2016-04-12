@@ -27,4 +27,9 @@
     <string name="enableSearch">Включить поиск</string>
     <string name="enableSearchDesc">Эта настройка включает/выключает поиск по заметкам</string>
     <string name="all">Все</string>
+    <string name="from">C </string>
+    <string name="to"> по </string>
+    <string name="getData">Синхронизация данных</string>
+    <string name="clearAccount">Сброс настроек</string>
+    <string name="select">Выбрать дату</string>
 </resources>

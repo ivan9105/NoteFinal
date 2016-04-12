@@ -3,6 +3,7 @@ package note.com.notefinal.fragment;
 import android.Manifest;
 import android.accounts.AccountManager;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -15,12 +16,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -39,25 +39,29 @@ import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import note.com.notefinal.MainActivity;
 import note.com.notefinal.R;
+import note.com.notefinal.fragment.dialog.DatePickerFragment;
+import note.com.notefinal.utils.DateUtil;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 /**
  * Created by Иван on 10.04.2016.
  */
-public class NoteCalendarFragment extends Fragment implements EasyPermissions.PermissionCallbacks{
+public class NoteCalendarFragment extends Fragment implements EasyPermissions.PermissionCallbacks {
     public static final String NAME = "noteCalendar";
     private MainActivity mainActivity;
 
     GoogleAccountCredential mCredential;
-    private TextView mOutputText;
-    private Button mCallApiButton;
     ProgressDialog mProgress;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
@@ -67,42 +71,57 @@ public class NoteCalendarFragment extends Fragment implements EasyPermissions.Pe
 
     private static final String BUTTON_TEXT = "Call Google Calendar API";
     private static final String PREF_ACCOUNT_NAME = "accountName";
-    private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
+    private static final String[] SCOPES = {CalendarScopes.CALENDAR_READONLY};
+
+    private Date fromDate;
+    private Date toDate;
+    private TextView result;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.note_calendar, container, false);
-        LinearLayout mainLayout = (LinearLayout) view.findViewById(R.id.mainLayout);
-        mainLayout.setOrientation(LinearLayout.VERTICAL);
-        mainLayout.setPadding(16, 16, 16, 16);
 
-        ViewGroup.LayoutParams tlp = new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+        TextView fromField = (TextView) view.findViewById(R.id.fromField);
+        TextView toField = (TextView) view.findViewById(R.id.toField);
 
-        mCallApiButton = new Button(mainActivity);
-        mCallApiButton.setText(BUTTON_TEXT);
-        mCallApiButton.setOnClickListener(new View.OnClickListener() {
+        Button selectFrom = (Button) view.findViewById(R.id.selectFrom);
+        Button selectTo = (Button) view.findViewById(R.id.selectTo);
+
+        selectFrom.setOnClickListener(new DateOnClickListener(fromField, true));
+        selectTo.setOnClickListener(new DateOnClickListener(toField, false));
+
+        fromDate = DateUtil.beginDay(DateUtil.addDays(DateUtil.getCurrentDate(), -14));
+        toDate = DateUtil.endDay(DateUtil.getCurrentDate());
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH);
+        fromField.setText(sdf.format(fromDate));
+        toField.setText(sdf.format(toDate));
+
+        result = (TextView) view.findViewById(R.id.result);
+
+        final Button clearAccount = (Button) view.findViewById(R.id.clearAccount);
+        clearAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallApiButton.setEnabled(false);
-                mOutputText.setText("");
-                getResultsFromApi();
-                mCallApiButton.setEnabled(true);
+                SharedPreferences preferences = mainActivity.getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.remove(PREF_ACCOUNT_NAME);
+                editor.apply();
+                mCredential.setSelectedAccountName(null);
             }
         });
 
-        mainLayout.addView(mCallApiButton);
-
-        mOutputText = new TextView(mainActivity);
-        mOutputText.setLayoutParams(tlp);
-        mOutputText.setPadding(16, 16, 16, 16);
-        mOutputText.setVerticalScrollBarEnabled(true);
-        mOutputText.setMovementMethod(new ScrollingMovementMethod());
-        mOutputText.setText(
-                "Click the \'" + BUTTON_TEXT + "\' button to test the API.");
-        mainLayout.addView(mOutputText);
+        final Button getButton = (Button) view.findViewById(R.id.getButton);
+        getButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getButton.setEnabled(false);
+                result.setText("");
+                getResultsFromApi();
+                getButton.setEnabled(true);
+            }
+        });
 
         mProgress = new ProgressDialog(mainActivity);
         mProgress.setMessage("Calling Google Calendar API ...");
@@ -120,8 +139,14 @@ public class NoteCalendarFragment extends Fragment implements EasyPermissions.Pe
             acquireGooglePlayServices();
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
-        } else if (!isDeviceOnline()) {
-            mOutputText.setText("No network connection available.");
+        } else {
+            runTask();
+        }
+    }
+
+    private void runTask() {
+        if (!isDeviceOnline()) {
+            result.setText("No network connection available.");
         } else {
             new MakeRequestTask(mCredential).execute();
         }
@@ -133,13 +158,9 @@ public class NoteCalendarFragment extends Fragment implements EasyPermissions.Pe
                 mainActivity, Manifest.permission.GET_ACCOUNTS)) {
             String accountName = mainActivity.getPreferences(Context.MODE_PRIVATE)
                     .getString(PREF_ACCOUNT_NAME, null);
-            //Todo account name get from database and createLogin form for it
-            //Todo Note final set eventId field in dataBase
-            //Todo get from database
-            accountName = null;
-
             if (accountName != null) {
                 mCredential.setSelectedAccountName(accountName);
+                runTask();
             } else {
                 // Start a dialog from which the user can choose an account
                 startActivityForResult(
@@ -168,10 +189,10 @@ public class NoteCalendarFragment extends Fragment implements EasyPermissions.Pe
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch(requestCode) {
+        switch (requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != Activity.RESULT_OK) {
-                    mOutputText.setText(
+                    result.setText(
                             "This app requires Google Play Services. Please install " +
                                     "Google Play Services on your device and relaunch this app.");
                 } else {
@@ -279,11 +300,13 @@ public class NoteCalendarFragment extends Fragment implements EasyPermissions.Pe
 
         private List<String> getDataFromApi() throws IOException {
             // List the next 10 events from the primary calendar.
-            DateTime now = new DateTime(System.currentTimeMillis());
+            DateTime from = new DateTime(fromDate);
+            DateTime to = new DateTime(toDate);
             List<String> eventStrings = new ArrayList<>();
             Events events = mService.events().list("primary")
-                    .setMaxResults(10)
-                    .setTimeMin(now)
+                    .setMaxResults(10000)
+                    .setTimeMin(from)
+                    .setTimeMax(to)
                     .setOrderBy("startTime")
                     .setSingleEvents(true)
                     .execute();
@@ -304,7 +327,7 @@ public class NoteCalendarFragment extends Fragment implements EasyPermissions.Pe
 
         @Override
         protected void onPreExecute() {
-            mOutputText.setText("");
+            result.setText("");
             mProgress.show();
         }
 
@@ -312,10 +335,10 @@ public class NoteCalendarFragment extends Fragment implements EasyPermissions.Pe
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
             if (output == null || output.size() == 0) {
-                mOutputText.setText("No results returned.");
+                result.setText("No results returned.");
             } else {
                 output.add(0, "Data retrieved using the Google Calendar API:");
-                mOutputText.setText(TextUtils.join("\n", output));
+                result.setText(TextUtils.join("\n", output));
             }
         }
 
@@ -332,12 +355,68 @@ public class NoteCalendarFragment extends Fragment implements EasyPermissions.Pe
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             REQUEST_AUTHORIZATION);
                 } else {
-                    mOutputText.setText("The following error occurred:\n"
+                    result.setText("The following error occurred:\n"
                             + mLastError.getMessage());
                 }
             } else {
-                mOutputText.setText("Request cancelled.");
+                result.setText("Request cancelled.");
             }
+        }
+    }
+
+    private class DateOnClickListener implements View.OnClickListener {
+        private TextView textView;
+        private boolean from;
+
+        public DateOnClickListener(TextView textView, boolean from) {
+            this.textView = textView;
+            this.from = from;
+        }
+
+        @Override
+        public void onClick(View v) {
+            DatePickerFragment dateFragment = new DatePickerFragment();
+
+            Calendar calender = Calendar.getInstance();
+            Bundle args = new Bundle();
+            args.putInt("year", calender.get(Calendar.YEAR));
+            args.putInt("month", calender.get(Calendar.MONTH));
+            args.putInt("day", calender.get(Calendar.DAY_OF_MONTH));
+            dateFragment.setArguments(args);
+
+            dateFragment.setCallBack(new TextOnDateSetListener(textView, from));
+            dateFragment.show(mainActivity.getSupportFragmentManager(), "Date Picker");
+        }
+    }
+
+    private class TextOnDateSetListener implements DatePickerDialog.OnDateSetListener {
+        private TextView textView;
+        private boolean from;
+
+        public TextOnDateSetListener(TextView textView, boolean from) {
+            this.textView = textView;
+            this.from = from;
+        }
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.MONTH, monthOfYear);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            calendar.set(Calendar.YEAR, year);
+
+            if (from) {
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                fromDate = calendar.getTime();
+            } else {
+                calendar.set(Calendar.HOUR_OF_DAY, 23);
+                calendar.set(Calendar.MINUTE, 59);
+                toDate = calendar.getTime();
+            }
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH);
+            textView.setText(sdf.format(calendar.getTime()));
         }
     }
 }

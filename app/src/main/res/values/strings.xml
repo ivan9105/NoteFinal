@@ -28,4 +28,9 @@
     <string name="enableSearchDesc">This setting enables / disables the search for notes</string>
     <string name="widgetName">Free note widget</string>
     <string name="all">All</string>
+    <string name="from">From </string>
+    <string name="to"> to </string>
+    <string name="getData">Data synchronization</string>
+    <string name="clearAccount">Reset settings</string>
+    <string name="select">"Select date"</string>
 </resources>
