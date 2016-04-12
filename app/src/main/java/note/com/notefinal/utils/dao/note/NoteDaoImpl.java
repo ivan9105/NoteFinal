@@ -57,7 +57,7 @@ public class NoteDaoImpl implements NoteDao<Note> {
     public void removeItem(Note item) {
         db.beginTransaction();
         try {
-            db.delete(TABLE_NAME, "id = ?", new String[] {String.valueOf(item.getId())});
+            db.delete(TABLE_NAME, "ID = ?", new String[] {String.valueOf(item.getId())});
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
@@ -71,7 +71,7 @@ public class NoteDaoImpl implements NoteDao<Note> {
         db.beginTransaction();
         try {
             Cursor cursor = db.query(TABLE_NAME, new String[]{"ID", "TITLE", "DESCRIPTION",
-                    "CREATE_TS", "PRIORITY"}, null, null, null, null, null);
+                    "CREATE_TS", "PRIORITY", "EVENT_ID"}, null, null, null, null, null);
 
             if (cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
@@ -80,6 +80,7 @@ public class NoteDaoImpl implements NoteDao<Note> {
                     String description = cursor.getString(cursor.getColumnIndex("DESCRIPTION"));
                     Date createTs = DateUtil.toDate(cursor.getString(cursor.getColumnIndex("CREATE_TS")));
                     String priority = cursor.getString(cursor.getColumnIndex("PRIORITY"));
+                    String eventId = cursor.getString(cursor.getColumnIndex("EVENT_ID"));
 
                     Note note = new Note();
                     note.setId(UUID.fromString(id));
@@ -87,6 +88,7 @@ public class NoteDaoImpl implements NoteDao<Note> {
                     note.setDescription(description);
                     note.setCreateTs(createTs);
                     note.setPriority(NotePriority.getById(priority));
+                    note.setEventId(eventId);
 
                     items.add(note);
 
@@ -112,7 +114,7 @@ public class NoteDaoImpl implements NoteDao<Note> {
         db.beginTransaction();
         try {
             Cursor cursor = db.query(TABLE_NAME, new String[]{"ID", "TITLE", "DESCRIPTION",
-                    "CREATE_TS", "PRIORITY"}, "ID = ?", new String[] {id.toString()}, null, null, null);
+                    "CREATE_TS", "PRIORITY", "EVENT_ID"}, "ID = ?", new String[] {id.toString()}, null, null, null);
 
             if (cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
@@ -120,6 +122,7 @@ public class NoteDaoImpl implements NoteDao<Note> {
                     String description = cursor.getString(cursor.getColumnIndex("DESCRIPTION"));
                     Date createTs = DateUtil.toDate(cursor.getString(cursor.getColumnIndex("CREATE_TS")));
                     String priority = cursor.getString(cursor.getColumnIndex("PRIORITY"));
+                    String eventId = cursor.getString(cursor.getColumnIndex("EVENT_ID"));
 
                     Note note = new Note();
                     note.setId(id);
@@ -127,6 +130,7 @@ public class NoteDaoImpl implements NoteDao<Note> {
                     note.setDescription(description);
                     note.setCreateTs(createTs);
                     note.setPriority(NotePriority.getById(priority));
+                    note.setEventId(eventId);
 
                     item = note;
 
@@ -151,6 +155,7 @@ public class NoteDaoImpl implements NoteDao<Note> {
         cv.put("DESCRIPTION", item.getDescription());
         cv.put("CREATE_TS", DateUtil.toString(item.getCreateTs()));
         cv.put("PRIORITY", item.getPriority().getId());
+        cv.put("EVENT_ID", item.getEventId() != null ? item.getEventId().toString() : null);
         return cv;
     }
 
@@ -174,7 +179,7 @@ public class NoteDaoImpl implements NoteDao<Note> {
             }
 
             Cursor cursor = db.query(TABLE_NAME, new String[]{"ID", "TITLE", "DESCRIPTION",
-                    "CREATE_TS", "PRIORITY"}, where,
+                    "CREATE_TS", "PRIORITY", "EVENT_ID"}, where,
                     params, null, null, null);
 
             if (cursor.moveToFirst()) {
@@ -184,6 +189,7 @@ public class NoteDaoImpl implements NoteDao<Note> {
                     String description = cursor.getString(cursor.getColumnIndex("DESCRIPTION"));
                     Date createTs = DateUtil.toDate(cursor.getString(cursor.getColumnIndex("CREATE_TS")));
                     String priorityId = cursor.getString(cursor.getColumnIndex("PRIORITY"));
+                    String eventId = cursor.getString(cursor.getColumnIndex("EVENT_ID"));
 
                     Note note = new Note();
                     note.setId(UUID.fromString(id));
@@ -191,6 +197,7 @@ public class NoteDaoImpl implements NoteDao<Note> {
                     note.setDescription(description);
                     note.setCreateTs(createTs);
                     note.setPriority(NotePriority.getById(priorityId));
+                    note.setEventId(eventId);
 
                     items.add(note);
 

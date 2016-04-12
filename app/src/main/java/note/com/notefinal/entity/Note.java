@@ -17,6 +17,7 @@ public class Note implements Parcelable {
     private String description;
     private Date createTs;
     private String priority;
+    private String eventId;
 
     public Note() {
     }
@@ -29,6 +30,7 @@ public class Note implements Parcelable {
         this.title = data[1];
         this.description = data[2];
         this.priority = data[3];
+        this.eventId = data[4];
         this.createTs = new Date(source.readLong());
     }
 
@@ -72,6 +74,14 @@ public class Note implements Parcelable {
         this.priority = priority.getId();
     }
 
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -83,7 +93,8 @@ public class Note implements Parcelable {
                 String.valueOf(id),
                 title,
                 description,
-                priority
+                priority,
+                eventId
         });
         dest.writeLong(createTs.getTime());
     }

@@ -69,7 +69,6 @@ public class NoteCalendarFragment extends Fragment implements EasyPermissions.Pe
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 
-    private static final String BUTTON_TEXT = "Call Google Calendar API";
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = {CalendarScopes.CALENDAR_READONLY};
 
@@ -124,7 +123,7 @@ public class NoteCalendarFragment extends Fragment implements EasyPermissions.Pe
         });
 
         mProgress = new ProgressDialog(mainActivity);
-        mProgress.setMessage("Calling Google Calendar API ...");
+        mProgress.setMessage(mainActivity.getResources().getString(R.string.callingGoogleCalendarAPI));
 
         // Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
@@ -146,7 +145,7 @@ public class NoteCalendarFragment extends Fragment implements EasyPermissions.Pe
 
     private void runTask() {
         if (!isDeviceOnline()) {
-            result.setText("No network connection available.");
+            result.setText(mainActivity.getResources().getString(R.string.noNetworkConnectionAvailable));
         } else {
             new MakeRequestTask(mCredential).execute();
         }
@@ -171,7 +170,7 @@ public class NoteCalendarFragment extends Fragment implements EasyPermissions.Pe
             // Request the GET_ACCOUNTS permission via a user dialog
             EasyPermissions.requestPermissions(
                     this,
-                    "This app needs to access your Google account (via Contacts).",
+                    mainActivity.getResources().getString(R.string.thisAppNeedsToAccessYourProfile),
                     REQUEST_PERMISSION_GET_ACCOUNTS,
                     Manifest.permission.GET_ACCOUNTS);
         }
@@ -192,9 +191,10 @@ public class NoteCalendarFragment extends Fragment implements EasyPermissions.Pe
         switch (requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != Activity.RESULT_OK) {
+                    String text = mainActivity.getResources().getString(R.string.thisAppRequiresGooglePlayServices) +
+                            mainActivity.getResources().getString(R.string.thisAppRequiresGooglePlayServices_);
                     result.setText(
-                            "This app requires Google Play Services. Please install " +
-                                    "Google Play Services on your device and relaunch this app.");
+                            text);
                 } else {
                     getResultsFromApi();
                 }
@@ -283,7 +283,7 @@ public class NoteCalendarFragment extends Fragment implements EasyPermissions.Pe
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             mService = new com.google.api.services.calendar.Calendar.Builder(
                     transport, jsonFactory, credential)
-                    .setApplicationName("Google Calendar API Android Quickstart")
+                    .setApplicationName("Final Note")
                     .build();
         }
 
@@ -319,8 +319,11 @@ public class NoteCalendarFragment extends Fragment implements EasyPermissions.Pe
                     // the start date.
                     start = event.getStart().getDate();
                 }
-                eventStrings.add(
-                        String.format("%s (%s)", event.getSummary(), start));
+                String summary = event.getSummary();
+                String description = event.getDescription();
+                String id = event.getId();
+
+                eventStrings.add(String.format("%s (%s)", summary, start));
             }
             return eventStrings;
         }
@@ -335,9 +338,9 @@ public class NoteCalendarFragment extends Fragment implements EasyPermissions.Pe
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
             if (output == null || output.size() == 0) {
-                result.setText("No results returned.");
+                result.setText(R.string.noResultsReturned);
             } else {
-                output.add(0, "Data retrieved using the Google Calendar API:");
+                output.add(0, mainActivity.getResources().getString(R.string.dataRetrievedUsing));
                 result.setText(TextUtils.join("\n", output));
             }
         }
@@ -355,11 +358,12 @@ public class NoteCalendarFragment extends Fragment implements EasyPermissions.Pe
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             REQUEST_AUTHORIZATION);
                 } else {
-                    result.setText("The following error occurred:\n"
-                            + mLastError.getMessage());
+                    String error = String.format("%s\n", mainActivity.getResources().
+                            getString(R.string.followingErrorOccurred)) + mLastError.getMessage();
+                    result.setText(error);
                 }
             } else {
-                result.setText("Request cancelled.");
+                result.setText(mainActivity.getResources().getString(R.string.requestCancelled));
             }
         }
     }

@@ -33,4 +33,13 @@
     <string name="getData">Data synchronization</string>
     <string name="clearAccount">Reset settings</string>
     <string name="select">"Select date"</string>
+    <string name="requestCancelled">Request cancelled</string>
+    <string name="followingErrorOccurred">The following error occurred:</string>
+    <string name="dataRetrievedUsing">Data retrieved using the Google Calendar API:</string>
+    <string name="noResultsReturned">No results returned.</string>
+    <string name="thisAppRequiresGooglePlayServices">This app requires Google Play Services. Please install</string>
+    <string name="thisAppRequiresGooglePlayServices_">Google Play Services on your device and relaunch this app.</string>
+    <string name="thisAppNeedsToAccessYourProfile">This app needs to access your Google account (via Contacts).</string>
+    <string name="noNetworkConnectionAvailable">No network connection available.</string>
+    <string name="callingGoogleCalendarAPI">Calling Google Calendar API ...</string>
 </resources>

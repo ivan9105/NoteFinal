@@ -32,4 +32,13 @@
     <string name="getData">Синхронизация данных</string>
     <string name="clearAccount">Сброс настроек</string>
     <string name="select">Выбрать дату</string>
+    <string name="requestCancelled">Запрос отменен</string>
+    <string name="followingErrorOccurred">Произошла следующая ошибка:</string>
+    <string name="dataRetrievedUsing">Данные получены с помощью API Google Calendar:</string>
+    <string name="noResultsReturned">Результаты не возвращаются.</string>
+    <string name="thisAppRequiresGooglePlayServices">Это приложение требует Play Служб Google. Пожалуйста, установите</string>
+    <string name="thisAppRequiresGooglePlayServices_">Google Play Services на устройстве и запустить это приложение.</string>
+    <string name="thisAppNeedsToAccessYourProfile">Это приложение должно получить доступ к вашей учетной записи Google (через контакты).</string>
+    <string name="noNetworkConnectionAvailable">Нет подключения к сети доступны.</string>
+    <string name="callingGoogleCalendarAPI">Вызов Google Calendar API ...</string>
 </resources>
