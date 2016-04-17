@@ -8,8 +8,10 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:layout_gravity="center_horizontal"
         android:orientation="horizontal">
 
         <TextView
@@ -23,25 +25,28 @@
         <TextView
             android:layout_width="145dp"
             android:layout_height="match_parent"
-            android:textColor="@color/black"
+            android:textColor="#1e88d4"
             android:textSize="16sp"
             android:id="@+id/fromField"
             />
 
         <Button
+            android:layout_width="164dp"
             android:id="@+id/selectFrom"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="38dp"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textAllCaps="false"
+            android:background="@drawable/calendar_button_selector"
             android:text="@string/select"
             />
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:layout_gravity="center_horizontal"
         android:orientation="horizontal">
 
         <TextView
@@ -55,41 +60,49 @@
         <TextView
             android:layout_width="145dp"
             android:layout_height="match_parent"
-            android:textColor="@color/black"
+            android:textColor="#1e88d4"
             android:textSize="16sp"
             android:id="@+id/toField"
             />
 
         <Button
             android:id="@+id/selectTo"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="164dp"
+            android:layout_height="38dp"
             android:textColor="@color/black"
             android:textSize="16sp"
+            android:background="@drawable/calendar_button_selector"
             android:textAllCaps="false"
             android:text="@string/select"
             />
     </LinearLayout>
 
     <Button
+        android:layout_margin="4dp"
         android:id="@+id/clearAccount"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="340dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="38dp"
         android:text="@string/clearAccount"
         android:textColor="@color/black"
+        android:background="@drawable/calendar_button_selector"
         android:textAllCaps="false"
         android:textSize="16sp" />
 
     <Button
+        android:layout_margin="4dp"
         android:id="@+id/getButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="340dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="38dp"
         android:text="@string/getData"
         android:textColor="@color/black"
+        android:background="@drawable/calendar_button_selector"
         android:textAllCaps="false"
         android:textSize="16sp" />
 
     <TextView
+        android:layout_margin="4dp"
         android:id="@+id/result"
         android:padding="16dp"
         android:layout_width="match_parent"
