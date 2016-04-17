@@ -12,4 +12,6 @@ import note.com.notefinal.utils.dao.Dao;
  */
 public interface NoteDao<Note> extends Dao<Note> {
     List<Note> getItems(String param, @Nullable NotePriority priority);
+    @Nullable
+    Note getItemByEventId(String eventId);
 }

@@ -17,13 +17,13 @@ public class DateUtil {
     }
 
     public static String toString(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss", Locale.ENGLISH);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
         return sdf.format(date);
     }
 
     @Nullable
     public static Date toDate(String dateStr) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss", Locale.ENGLISH);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
         try {
             return sdf.parse(dateStr);
         } catch (ParseException e) {

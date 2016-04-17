@@ -46,11 +46,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 import note.com.notefinal.MainActivity;
 import note.com.notefinal.R;
+import note.com.notefinal.entity.Note;
+import note.com.notefinal.entity.enums.NotePriority;
 import note.com.notefinal.fragment.dialog.DatePickerFragment;
 import note.com.notefinal.utils.DateUtil;
+import note.com.notefinal.utils.dao.note.NoteDao;
+import note.com.notefinal.utils.dao.note.NoteDaoImpl;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -75,6 +80,7 @@ public class NoteCalendarFragment extends Fragment implements EasyPermissions.Pe
     private Date fromDate;
     private Date toDate;
     private TextView result;
+    private NoteDao<Note> noteDao;
 
     @Nullable
     @Override
@@ -129,6 +135,8 @@ public class NoteCalendarFragment extends Fragment implements EasyPermissions.Pe
         mCredential = GoogleAccountCredential.usingOAuth2(
                 mainActivity, Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
+
+        noteDao = new NoteDaoImpl();
 
         return view;
     }
@@ -312,6 +320,9 @@ public class NoteCalendarFragment extends Fragment implements EasyPermissions.Pe
                     .execute();
             List<Event> items = events.getItems();
 
+            String added = mainActivity.getResources().getString(R.string.added);
+            String updated = mainActivity.getResources().getString(R.string.updated);
+
             for (Event event : items) {
                 DateTime start = event.getStart().getDateTime();
                 if (start == null) {
@@ -319,11 +330,30 @@ public class NoteCalendarFragment extends Fragment implements EasyPermissions.Pe
                     // the start date.
                     start = event.getStart().getDate();
                 }
-                String summary = event.getSummary();
+                String summary = event.getSummary() == null ? event.getId() : event.getSummary();
                 String description = event.getDescription();
                 String id = event.getId();
 
-                eventStrings.add(String.format("%s (%s)", summary, start));
+                Note find = noteDao.getItemByEventId(id);
+                if (find == null) {
+                    Note item = new Note();
+                    item.setPriority(NotePriority.NORMAL);
+                    item.setTitle(summary);
+                    item.setDescription(description);
+                    item.setCreateTs(start != null ? new Date(start.getValue()) : DateUtil.getCurrentDate());
+                            item.setId(UUID.randomUUID());
+                    item.setEventId(id);
+
+                    eventStrings.add(String.format("%s: %s (%s)", added, summary, DateUtil.toString(item.getCreateTs())));
+                    noteDao.addItem(item);
+                } else {
+                    find.setTitle(summary);
+                    find.setDescription(description);
+                    find.setCreateTs(start != null ? new Date(start.getValue()) : DateUtil.getCurrentDate());
+
+                    eventStrings.add(String.format("%s: %s (%s)", updated, summary, DateUtil.toString(find.getCreateTs())));
+                    noteDao.updateItem(find);
+                }
             }
             return eventStrings;
         }

@@ -40,5 +40,7 @@
     <string name="thisAppRequiresGooglePlayServices_">Google Play Services на устройстве и запустить это приложение.</string>
     <string name="thisAppNeedsToAccessYourProfile">Это приложение должно получить доступ к вашей учетной записи Google (через контакты).</string>
     <string name="noNetworkConnectionAvailable">Нет подключения к сети доступны.</string>
-    <string name="callingGoogleCalendarAPI">Вызов Google Calendar API ...</string>
+    <string name="callingGoogleCalendarAPI">Вызов Google Calendar API …</string>
+    <string name="added">Добавлен</string>
+    <string name="updated">Обновлен</string>
 </resources>
