@@ -3,6 +3,7 @@ package note.com.notefinal.entity.reminder;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,7 +13,7 @@ import java.util.UUID;
 public class ReminderDay implements Parcelable {
     private UUID id;
     private UUID noteId;
-    private String day;
+    private Date day;
 
     private List<ReminderHour> hours;
 
@@ -22,12 +23,12 @@ public class ReminderDay implements Parcelable {
     }
 
     public ReminderDay(Parcel source) {
-        String[] data = new String[3];
+        String[] data = new String[2];
         source.readStringArray(data);
 
         this.id = UUID.fromString(data[0]);
         this.noteId = UUID.fromString(data[1]);
-        this.day = data[2];
+        this.day = new Date(source.readLong());
     }
 
     public UUID getId() {
@@ -46,11 +47,11 @@ public class ReminderDay implements Parcelable {
         this.noteId = noteId;
     }
 
-    public String getDay() {
+    public Date getDay() {
         return day;
     }
 
-    public void setDay(String day) {
+    public void setDay(Date day) {
         this.day = day;
     }
 
@@ -91,8 +92,8 @@ public class ReminderDay implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStringArray(new String[]{
                 String.valueOf(id),
-                String.valueOf(noteId),
-                day
+                String.valueOf(noteId)
         });
+        dest.writeLong(day.getTime());
     }
 }

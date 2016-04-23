@@ -15,7 +15,6 @@ import note.com.notefinal.entity.Note;
 import note.com.notefinal.entity.enums.NotePriority;
 import note.com.notefinal.utils.DBUtils;
 import note.com.notefinal.utils.DateUtil;
-import note.com.notefinal.utils.dao.enums.View;
 
 /**
  * Created by Иван on 01.11.2015.
@@ -102,7 +101,7 @@ public class NoteDaoImpl implements NoteDao<Note> {
 
     @Nullable
     @Override
-    public Note getItem(UUID id, View view) {
+    public Note getItem(UUID id) {
         Note item = null;
 
         db.beginTransaction();

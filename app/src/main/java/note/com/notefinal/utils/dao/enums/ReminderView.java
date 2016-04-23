@@ -6,21 +6,24 @@ import java.util.Map;
 /**
  * Created by Иван on 01.11.2015.
  */
-public enum View {
-    LOCAL("S"),
-    FULL("F");
+public enum ReminderView {
+    LOCAL("LOCAL"),
+    DAYS("DAY"),
+    DATE("DATE"),
+    FULL("FULL");
+
 
     private final String id;
 
-    private static final Map<String, View> data = new HashMap<>();
+    private static final Map<String, ReminderView> data = new HashMap<>();
 
     static {
-        for (View view : values()) {
+        for (ReminderView view : values()) {
             data.put(view.id, view);
         }
     }
 
-    View(String id) {
+    ReminderView(String id) {
         this.id = id;
     }
 
@@ -28,7 +31,7 @@ public enum View {
         return id;
     }
 
-    public static View getById(String id) {
+    public static ReminderView getById(String id) {
         return data.get(id);
     }
 }
