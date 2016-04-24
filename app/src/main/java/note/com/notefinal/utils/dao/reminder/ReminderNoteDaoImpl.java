@@ -1,9 +1,11 @@
 package note.com.notefinal.utils.dao.reminder;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,12 +65,144 @@ public class ReminderNoteDaoImpl implements ReminderDao<ReminderNote> {
 
     @Override
     public void updateItem(ReminderNote item) {
+        ContentValues cv = getContentValues(item);
 
+        db.beginTransaction();
+        try {
+            db.update(NOTE_TABLE_NAME, cv, "ID = ?", new String[]{String.valueOf(item.getId())});
+
+            updateDates(item);
+            updateDays(item);
+
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    private void updateDays(ReminderNote item) {
+        if (!CollectionUtil.isEmpty(item.getDays())) {
+            List<String> ids = new ArrayList<>();
+            for (ReminderDay day : item.getDays()) {
+                ids.add(day.getId().toString());
+            }
+
+            Cursor cursor = db.query(NOTE_DAY_TABLE_NAME, new String[]{"ID"},
+                    "ID = ?", (String[]) ids.toArray(), null, null, null);
+            List<String> exists = new ArrayList<>();
+            if (cursor.moveToFirst()) {
+                while (!cursor.isAfterLast()) {
+                    String id = cursor.getString(cursor.getColumnIndex("ID"));
+                    exists.add(id);
+                    cursor.moveToNext();
+                }
+            }
+            cursor.close();
+
+            for (ReminderDay day : item.getDays()) {
+                if (exists.contains(day.getId().toString())) {
+                    db.update(NOTE_DAY_TABLE_NAME, getContentValues(day), "ID = ?",
+                            new String[]{String.valueOf(day.getId())});
+                } else {
+                    db.insert(NOTE_DAY_TABLE_NAME, null, getContentValues(day));
+                }
+                updateHours(day);
+            }
+        }
+    }
+
+    private void updateHours(ReminderDay day) {
+        if (!CollectionUtil.isEmpty(day.getHours())) {
+            List<String> ids = new ArrayList<>();
+            for (ReminderHour hour : day.getHours()) {
+                ids.add(hour.getId().toString());
+            }
+
+            Cursor cursor = db.query(NOTE_HOUR_TABLE_NAME, new String[]{"ID"},
+                    "ID = ?", (String[]) ids.toArray(), null, null, null);
+            List<String> exists = new ArrayList<>();
+            if (cursor.moveToFirst()) {
+                while (!cursor.isAfterLast()) {
+                    String id = cursor.getString(cursor.getColumnIndex("ID"));
+                    exists.add(id);
+                    cursor.moveToNext();
+                }
+            }
+            cursor.close();
+
+            for (ReminderHour hour : day.getHours()) {
+                if (exists.contains(hour.getId().toString())) {
+                    db.update(NOTE_HOUR_TABLE_NAME, getContentValues(hour), "ID = ?",
+                            new String[]{String.valueOf(day.getId())});
+                } else {
+                    db.insert(NOTE_HOUR_TABLE_NAME, null, getContentValues(hour));
+                }
+            }
+        }
+    }
+
+    private void updateDates(ReminderNote item) {
+        if (!CollectionUtil.isEmpty(item.getDates())) {
+            List<String> ids = new ArrayList<>();
+            for (ReminderDate date : item.getDates()) {
+                ids.add(date.getId().toString());
+            }
+
+            Cursor cursor = db.query(NOTE_DATE_TABLE_NAME, new String[]{"ID"},
+                    "ID = ?", (String[]) ids.toArray(), null, null, null);
+            List<String> exists = new ArrayList<>();
+            if (cursor.moveToFirst()) {
+                while (!cursor.isAfterLast()) {
+                    String id = cursor.getString(cursor.getColumnIndex("ID"));
+                    exists.add(id);
+                    cursor.moveToNext();
+                }
+            }
+            cursor.close();
+
+            for (ReminderDate date : item.getDates()) {
+                if (exists.contains(date.getId().toString())) {
+                    db.update(NOTE_DATE_TABLE_NAME, getContentValues(date), "ID = ?",
+                            new String[]{String.valueOf(date.getId())});
+                } else {
+                    db.insert(NOTE_DATE_TABLE_NAME, null, getContentValues(date));
+                }
+            }
+        }
     }
 
     @Override
     public void removeItem(ReminderNote item) {
+        db.beginTransaction();
+        try {
+            db.delete(NOTE_TABLE_NAME, "ID = ?", new String[]{String.valueOf(item.getId())});
 
+            if (!CollectionUtil.isEmpty(item.getDates())) {
+                List<String> ids = new ArrayList<>();
+                for (ReminderDate date : item.getDates()) {
+                    ids.add(date.getId().toString());
+                }
+                db.delete(NOTE_DATE_TABLE_NAME, "ID = ?", (String[]) ids.toArray());
+            }
+
+            if (!CollectionUtil.isEmpty(item.getDays())) {
+                List<String> ids = new ArrayList<>();
+                List<String> ids_ = new ArrayList<>();
+                for (ReminderDay day : item.getDays()) {
+                    ids.add(day.getId().toString());
+
+                    for (ReminderHour hour : day.getHours()) {
+                        ids_.add(hour.getId().toString());
+                    }
+                }
+                db.delete(NOTE_DAY_TABLE_NAME, "ID = ?", (String[]) ids.toArray());
+                db.delete(NOTE_HOUR_TABLE_NAME, "ID = ?", (String[]) ids_.toArray());
+            }
+
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 
     @Override
