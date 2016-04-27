@@ -15,6 +15,9 @@ public class ReminderDate implements Parcelable {
     private Date date;
     private ReminderNote note;
 
+    public ReminderDate() {
+    }
+
     protected ReminderDate(Parcel source) {
         String[] data = new String[2];
         source.readStringArray(data);

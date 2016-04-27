@@ -12,5 +12,5 @@ import note.com.notefinal.utils.dao.enums.ReminderView;
 public interface ReminderDao<ReminderNote> extends Dao<ReminderNote> {
     List<ReminderNote> getItems(ReminderView view);
     List<ReminderNote> getItemsByNoteId(ReminderView view, UUID noteId);
-    ReminderNote getItem(ReminderView view);
+    ReminderNote getItem(ReminderView view, UUID id);
 }
