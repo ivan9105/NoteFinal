@@ -43,4 +43,5 @@
     <string name="callingGoogleCalendarAPI">Вызов Google Calendar API …</string>
     <string name="added">Добавлен</string>
     <string name="updated">Обновлен</string>
+    <string name="addReminder">Добавить напоминание</string>
 </resources>

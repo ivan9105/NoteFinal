@@ -1,26 +1,24 @@
 package note.com.notefinal;
 
-import android.app.SearchManager;
-import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.SearchView;
-import android.view.Display;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
 
 import java.lang.reflect.Field;
 
+import note.com.notefinal.activities.ReminderActivity;
 import note.com.notefinal.fragment.NoteCalendarFragment;
 import note.com.notefinal.fragment.NoteEditorFragment;
 import note.com.notefinal.fragment.NoteListFragment;
@@ -31,7 +29,7 @@ import note.com.notefinal.utils.DBUtils;
 import note.com.notefinal.utils.LogUtils;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
     private NoteListFragment listFragment;
     private NoteRemoveListFragment noteRemoveListFragment;
     private NoteEditorFragment noteEditorFragment;
@@ -213,6 +211,10 @@ public class MainActivity extends ActionBarActivity {
             case R.id.settings:
                 initPreferences();
                 menu.findItem(R.id.settings).setVisible(false);
+                break;
+            case R.id.addReminder:
+                Intent intent = new Intent(this, ReminderActivity.class);
+                startActivity(intent);
                 break;
             case R.id.menu_search:
                 if ((NoteListFragment.NAME.equals(currentFragment))) {

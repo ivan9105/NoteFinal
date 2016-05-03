@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import note.com.notefinal.entity.reminder.ReminderNote;
@@ -40,7 +41,7 @@ public class ReminderNoteGSonUtil {
                 for (ReminderNote.ReminderDay day : note.getDays()) {
                     JSONObject dayObj = new JSONObject();
                     dayObj.put("id", day.getId().toString());
-                    dayObj.put("day", day.getDay().getTime());
+                    dayObj.put("day", day.getDay());
 
                     if (!CollectionUtil.isEmpty(day.getHours())) {
                         JSONArray hourArray = new JSONArray();
@@ -88,7 +89,36 @@ public class ReminderNoteGSonUtil {
                     note.getDates().add(date_);
                 }
 
+                JSONArray daysArray = jsonObject.getJSONArray("days");
+                for (int i = 0; i < daysArray.length(); i++) {
+                    JSONObject dayObj = daysArray.getJSONObject(i);
+                    UUID id = UUID.fromString(dayObj.getString("id"));
+                    Integer day = dayObj.getInt("day");
 
+                    JSONArray hoursArray = dayObj.getJSONArray("hours");
+                    List<ReminderNote.ReminderHour> hours = new ArrayList<>();
+                    for (int j = 0; j < hoursArray.length(); j++) {
+                        JSONObject hourObj = hoursArray.getJSONObject(j);
+                        UUID hourId = UUID.fromString(hourObj.getString("id"));
+                        Date hour_ = new Date(hourObj.getLong("hour"));
+
+                        ReminderNote.ReminderHour hour = note.new ReminderHour();
+                        hour.setId(hourId);
+                        hour.setHour(hour_);
+                        hours.add(hour);
+                    }
+
+                    ReminderNote.ReminderDay day_ = note.new ReminderDay();
+                    day_.setId(id);
+                    day_.setDay(day);
+                    day_.setHours(hours);
+
+                    if (CollectionUtil.isEmpty(note.getDays())) {
+                        note.setDays(new ArrayList<ReminderNote.ReminderDay>());
+                    }
+
+                    note.getDays().add(day_);
+                }
             }
         } catch (JSONException ignore) {
         }

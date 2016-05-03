@@ -164,7 +164,7 @@ public class ReminderNote implements Parcelable {
 
     public class ReminderDay {
         private UUID id;
-        private Date day;
+        private Integer day;
         private List<ReminderHour> hours;
 
         public ReminderDay() {
@@ -174,7 +174,7 @@ public class ReminderNote implements Parcelable {
             return id;
         }
 
-        public Date getDay() {
+        public Integer getDay() {
             return day;
         }
 
@@ -186,7 +186,7 @@ public class ReminderNote implements Parcelable {
             this.id = id;
         }
 
-        public void setDay(Date day) {
+        public void setDay(Integer day) {
             this.day = day;
         }
 
