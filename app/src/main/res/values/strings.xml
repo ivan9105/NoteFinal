@@ -46,4 +46,11 @@
     <string name="updated">Updated</string>
     <string name="title_activity_reminder">ReminderActivity</string>
     <string name="addReminder">Add Reminder</string>
+    <string name="Mo">Mo</string>
+    <string name="Tu">Tu</string>
+    <string name="We">We</string>
+    <string name="Th">Th</string>
+    <string name="Fr">Fr</string>
+    <string name="Sa">Sa</string>
+    <string name="Su">Su</string>
 </resources>

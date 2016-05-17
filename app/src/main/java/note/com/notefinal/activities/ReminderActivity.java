@@ -19,11 +19,13 @@ import java.lang.reflect.Field;
 import note.com.notefinal.MainActivity;
 import note.com.notefinal.R;
 import note.com.notefinal.fragment.NoteListFragment;
+import note.com.notefinal.fragment.ReminderEditorFragment;
 import note.com.notefinal.fragment.reminder.ReminderListFragment;
 import note.com.notefinal.utils.LogUtils;
 
 public class ReminderActivity extends AppCompatActivity {
     private ReminderListFragment listFragment;
+    private ReminderEditorFragment editorFragment;
     private String currentFragment;
     private Menu menu;
 
@@ -60,20 +62,26 @@ public class ReminderActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.content, listFragment,
                 NoteListFragment.NAME).commit();
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
         if (menu != null) {
-            menu.findItem(R.id.addItem).setVisible(false);
-            menu.findItem(R.id.removeItems).setVisible(false);
-            menu.findItem(R.id.menu_search).setVisible(false);
-            menu.findItem(R.id.settings).setVisible(false);
-            menu.findItem(R.id.calendar).setVisible(false);
-            menu.findItem(R.id.addReminder).setVisible(false);
-
-            if (!preferences.getBoolean("searchEnable", true)) {
-                menu.findItem(R.id.menu_search).setVisible(false);
-            }
+            menu.findItem(R.id.addItem).setVisible(true);
         }
+    }
+
+    public void initEditor() {
+        LogUtils.log(ReminderActivity.class, "init editor fragment");
+
+        editorFragment = new ReminderEditorFragment();
+        currentFragment = ReminderEditorFragment.NAME;
+        editorFragment.setArguments(null);
+        editorFragment.setReminderActivity(this);
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, editorFragment,
+                ReminderEditorFragment.NAME).commit();
+        menu.findItem(R.id.addItem).setVisible(true);
+        menu.findItem(R.id.removeItems).setVisible(false);
+        menu.findItem(R.id.menu_search).setVisible(false);
+        menu.findItem(R.id.settings).setVisible(false);
+        menu.findItem(R.id.calendar).setVisible(false);
+        menu.findItem(R.id.addReminder).setVisible(false);
     }
 
     @Override
@@ -82,7 +90,7 @@ public class ReminderActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.actions_menu, menu);
         this.menu = menu;
 
-        menu.findItem(R.id.addItem).setVisible(false);
+        menu.findItem(R.id.addItem).setVisible(true);
         menu.findItem(R.id.removeItems).setVisible(false);
         menu.findItem(R.id.menu_search).setVisible(false);
         menu.findItem(R.id.settings).setVisible(false);
@@ -101,6 +109,7 @@ public class ReminderActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.addItem:
+                initEditor();
                 break;
             case R.id.removeItems:
                 break;
@@ -121,8 +130,12 @@ public class ReminderActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
 
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        if (currentFragment.equals(ReminderEditorFragment.NAME)) {
+            initListFragment(null);
+        } else {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 
     private void makeActionOverflowMenuShown() {

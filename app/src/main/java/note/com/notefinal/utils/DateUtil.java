@@ -21,6 +21,11 @@ public class DateUtil {
         return sdf.format(date);
     }
 
+    public static String formattedTime(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
+        return sdf.format(date);
+    }
+
     @Nullable
     public static Date toDate(String dateStr) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
